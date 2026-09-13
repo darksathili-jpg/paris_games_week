@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="dark">
+<html lang="fr" data-theme="dark" data-skin="cyber">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,7 +8,8 @@
   <title>PGW NSI Quest 2026</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=20260913-v2">
+  <link rel="stylesheet" href="css/game-themes.css?v=20260913-v2">
 </head>
 <body>
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
@@ -21,6 +22,12 @@
     </a>
     <div class="topbar-actions">
       <span id="network-chip" class="chip chip-muted" aria-live="polite">● Hors synchro</span>
+      <label class="sr-only" for="skin-select">Choisir un univers visuel</label>
+      <select id="skin-select" class="skin-select" aria-label="Choisir un univers visuel" title="Univers visuel">
+        <option value="cyber">Cyber</option>
+        <option value="arcade">Arcade</option>
+        <option value="esport">eSport</option>
+      </select>
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="Changer de thème" title="Changer de thème">◐</button>
       <a class="icon-btn" href="teacher.html" aria-label="Espace enseignant" title="Espace enseignant">⌘</a>
     </div>
@@ -36,10 +43,11 @@
   <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
-  <script src="config.js" defer></script>
-  <script src="js/content.js" defer></script>
-  <script src="js/storage.js" defer></script>
-  <script src="js/supabase-client.js" defer></script>
-  <script src="js/app.js" defer></script>
+  <script src="config.js?v=20260913-v2" defer></script>
+  <script src="js/content.js?v=20260913-v2" defer></script>
+  <script src="js/storage.js?v=20260913-v2" defer></script>
+  <script src="js/supabase-client.js?v=20260913-v2" defer></script>
+  <script src="js/theme-system.js?v=20260913-v2" defer></script>
+  <script src="js/app.js?v=20260913-v2" defer></script>
 </body>
 </html>
