@@ -22,6 +22,21 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;ba
 @media(max-width:390px){.grid{grid-template-columns:1fr}.card{min-height:180px}.glyph{position:absolute;right:18px;top:28px}.stats{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
+
+<style>
+/* V7.1 — composition mobile dédiée */
+@media(max-width:760px){
+  .top{height:64px;overflow:hidden}.brand img{width:42px;height:42px}.brand small{font-size:7px}.live{font-size:7px;padding:6px 8px}
+  .hero{padding:16px 14px 18px;display:grid;grid-template-columns:1fr 112px;grid-template-areas:"copy agent" "progress progress";align-items:end;gap:8px 6px}
+  .copy{grid-area:copy;text-align:left}.agent{grid-area:agent;height:205px;margin:0;align-self:end}.agent img{max-height:205px;width:145px;max-width:none;transform:translateX(-10px)}
+  .kicker{font-size:7px;letter-spacing:.12em;margin:0 0 7px}.copy h1{font-size:clamp(37px,11.5vw,52px);line-height:.82;letter-spacing:-.055em}.copy h1 span{margin-top:10px}.quest{font-size:15px;letter-spacing:.2em;margin:12px 0 0}.tagline{font-size:7px;letter-spacing:.11em;margin-top:12px}.desc{font-size:10px;line-height:1.45;margin:9px 0 0;max-width:42ch}
+  .start{margin:13px 0 0;padding:12px 13px;font-size:11px;width:100%}.meta{margin-top:11px;gap:5px;justify-content:flex-start}.meta span{font-size:6.5px;padding:6px 6px}
+  .progress{grid-area:progress;margin:6px 0 0;padding:11px 12px;display:grid;grid-template-columns:68px 1fr;grid-template-areas:"title stats" "ring stats";gap:4px 12px;align-items:center}.progress h2{grid-area:title;font-size:8px;margin:0;text-align:center}.ring{grid-area:ring;width:62px;height:62px;margin:0 auto}.ring:before{inset:7px}.ring b{font-size:15px}.stats{grid-area:stats;grid-template-columns:1fr 1fr;gap:7px;font-size:8px}.stats span{gap:4px}.stats i{width:11px}.quote{display:none}
+  .missions{padding-top:12px}.section-title{margin-bottom:9px}.section-title h2{font-size:12px}.section-title span{font-size:6.5px}.grid{grid-template-columns:repeat(2,1fr);gap:8px}.card{min-height:165px;padding:11px}.num{width:32px;height:32px;font-size:14px}.glyph{height:35px;font-size:29px}.card small{font-size:6.5px}.card h3{font-size:12px;margin:4px 0 5px}.card p{font-size:8px;line-height:1.35}.xp{left:11px;bottom:9px;font-size:7px}.lock{right:9px;bottom:9px;font-size:7px}
+  .mobile-cta{display:none!important}
+}
+@media(max-width:390px){.hero{grid-template-columns:1fr 94px}.agent{height:175px}.agent img{height:175px;width:125px}.copy h1{font-size:36px}.grid{grid-template-columns:repeat(2,1fr)}.card{min-height:170px}.glyph{position:static}.stats{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
 <header class="top wrap"><div class="brand"><img src="assets/watteau-logo.svg" alt=""><span><b>LYCÉE WATTEAU</b><small>VALENCIENNES // TERMINALE NSI</small></span></div><div class="live">● PGW 2026 · MISSION ACTIVE</div></header>
