@@ -1,8 +1,10 @@
-const CACHE = "pgw-nsi-quest-v1.2.0";
+const CACHE = "pgw-nsi-quest-v1.3.0";
 const APP_SHELL = [
   "./", "./index.html", "./teacher.html", "./config.js", "./manifest.webmanifest",
-  "./css/app.css", "./css/game-themes.css", "./js/content.js", "./js/storage.js",
-  "./js/supabase-client.js", "./js/theme-system.js", "./js/app.js", "./js/teacher.js", "./assets/icon.svg"
+  "./css/app.css", "./css/game-themes.css", "./css/cinematic.css",
+  "./js/content.js", "./js/storage.js", "./js/supabase-client.js", "./js/theme-system.js",
+  "./js/visual-effects.js", "./js/app.js", "./js/teacher.js",
+  "./assets/icon.svg", "./assets/watteau-logo.svg"
 ];
 
 self.addEventListener("install", event => {
@@ -31,10 +33,13 @@ self.addEventListener("fetch", event => {
       url.pathname.endsWith("/config.js") ||
       url.pathname.endsWith("/js/supabase-client.js") ||
       url.pathname.endsWith("/js/theme-system.js") ||
+      url.pathname.endsWith("/js/visual-effects.js") ||
       url.pathname.endsWith("/js/teacher.js") ||
       url.pathname.endsWith("/js/app.js") ||
       url.pathname.endsWith("/css/app.css") ||
-      url.pathname.endsWith("/css/game-themes.css");
+      url.pathname.endsWith("/css/game-themes.css") ||
+      url.pathname.endsWith("/css/cinematic.css") ||
+      url.pathname.endsWith("/assets/watteau-logo.svg");
 
     if (isFreshCritical) {
       event.respondWith(
