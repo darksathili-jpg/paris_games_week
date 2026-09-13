@@ -3,14 +3,18 @@
   let studentClient = null;
   let teacherClient = null;
 
+  function publicKey() {
+    return config.supabasePublishableKey || config.supabaseAnonKey || "";
+  }
+
   function configured() {
-    return Boolean(config.supabaseUrl && config.supabaseAnonKey && window.supabase?.createClient);
+    return Boolean(config.supabaseUrl && publicKey() && window.supabase?.createClient);
   }
 
   function getStudentClient() {
     if (!configured()) return null;
     if (!studentClient) {
-      studentClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, {
+      studentClient = window.supabase.createClient(config.supabaseUrl, publicKey(), {
         auth: { storageKey: "pgw-nsi-student-auth", persistSession: true, autoRefreshToken: true }
       });
     }
@@ -20,7 +24,7 @@
   function getTeacherClient() {
     if (!configured()) return null;
     if (!teacherClient) {
-      teacherClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, {
+      teacherClient = window.supabase.createClient(config.supabaseUrl, publicKey(), {
         auth: { storageKey: "pgw-nsi-teacher-auth", persistSession: true, autoRefreshToken: true }
       });
     }
