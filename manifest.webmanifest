@@ -1,0 +1,14 @@
+{
+  "name": "PGW NSI Quest 2026",
+  "short_name": "NSI Quest",
+  "description": "Compagnon de visite pédagogique Terminale NSI — Paris Games Week 2026",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08101f",
+  "theme_color": "#0a1022",
+  "lang": "fr-FR",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
