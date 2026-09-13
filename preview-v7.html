@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PGW NSI Quest — V7 Preview</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#050816;color:white;font-family:Inter,system-ui,Arial,sans-serif}body{min-height:100vh;overflow-x:hidden}
+.scene{position:relative;min-height:100vh;background:#050816 url('assets/v7-reference.jpg') center top/cover no-repeat;isolation:isolate;overflow:hidden}
+.scene:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,7,20,.02),rgba(4,7,20,.14));pointer-events:none;z-index:1}
+.glow{position:absolute;width:28vw;height:28vw;border-radius:50%;filter:blur(60px);opacity:.16;mix-blend-mode:screen;z-index:2;pointer-events:none;background:#19eaff;left:38%;top:22%;animation:drift 8s ease-in-out infinite alternate}
+.glow.b{background:#ff3fc8;left:65%;top:30%;animation-delay:-3s}.glow.c{background:#7b4dff;left:10%;top:50%;animation-delay:-5s}
+.ui{position:absolute;inset:0;z-index:3;pointer-events:none}
+.brand{position:absolute;left:2.7%;top:3%;display:flex;gap:10px;align-items:center;font-weight:900;letter-spacing:.08em;text-shadow:0 2px 12px #000}.brand img{width:58px;height:58px;object-fit:contain;background:#fff;border-radius:6px;padding:3px}.brand small{display:block;font-size:9px;color:#99a9c9;letter-spacing:.16em;margin-top:4px}
+.badge{position:absolute;right:2.8%;top:3.5%;padding:8px 13px;border:1px solid #2ff0ff66;background:#06152bbd;border-radius:999px;font:800 10px ui-monospace,monospace;letter-spacing:.1em;color:#7cf8ff;box-shadow:0 0 20px #19eaff1c}
+.hotspot{position:absolute;left:7.5%;top:34%;width:29%;height:7.2%;pointer-events:auto;border:0;background:transparent;cursor:pointer;border-radius:10px}
+.hotspot:focus-visible{outline:3px solid #fff;outline-offset:4px}.hotspot:hover{box-shadow:0 0 28px #c94dff99 inset,0 0 32px #7a4cff77;backdrop-filter:brightness(1.2)}
+.mission-hit{position:absolute;left:2.2%;right:2.2%;top:48%;height:18%;display:grid;grid-template-columns:repeat(6,1fr);gap:1.1%;pointer-events:none}
+.mission-hit button{pointer-events:auto;border:0;background:transparent;border-radius:10px;cursor:pointer;transition:.2s}
+.mission-hit button:hover{transform:translateY(-5px) scale(1.015);box-shadow:0 0 28px #50eaff55 inset,0 14px 30px #0008}.mission-hit button:focus-visible{outline:3px solid white}
+.note{position:absolute;right:2.6%;bottom:2.2%;padding:8px 11px;border-radius:8px;background:#040914bb;border:1px solid #ffffff1a;font:700 9px ui-monospace,monospace;color:#b7c4df;letter-spacing:.06em}
+.pulse{position:absolute;width:7px;height:7px;border-radius:50%;background:#61f8ff;box-shadow:0 0 18px #61f8ff;z-index:4;animation:pulse 2s ease-in-out infinite}.p1{left:8%;top:17%}.p2{right:8%;top:25%;animation-delay:-.8s}.p3{left:54%;top:57%;animation-delay:-1.4s}
+@keyframes pulse{50%{transform:scale(2.3);opacity:.35}}@keyframes drift{to{transform:translate(60px,-30px) scale(1.15)}}
+@media(max-width:850px){.scene{min-height:66.666vw;background-size:100% auto}.brand{transform:scale(.72);transform-origin:top left}.badge{transform:scale(.72);transform-origin:top right}.note{display:none}}
+@media(prefers-reduced-motion:reduce){.glow,.pulse{animation:none}}
+</style>
+</head>
+<body>
+<main class="scene" aria-label="Prévisualisation V7 PGW NSI Quest">
+  <div class="glow"></div><div class="glow b"></div><div class="glow c"></div>
+  <span class="pulse p1"></span><span class="pulse p2"></span><span class="pulse p3"></span>
+  <div class="ui">
+    <div class="brand"><img src="assets/watteau-logo.svg" alt=""><span>LYCÉE WATTEAU<small>VALENCIENNES // TERMINALE NSI</small></span></div>
+    <div class="badge">V7 · VISUAL PROTOTYPE</div>
+    <button class="hotspot" aria-label="Entrer dans la mission" onclick="document.querySelector('.mission-hit').scrollIntoView({behavior:'smooth',block:'center'})"></button>
+    <div class="mission-hit" aria-label="Les six missions">
+      <button aria-label="Mission 1 — Launch Zone"></button><button aria-label="Mission 2 — Campus Scan"></button><button aria-label="Mission 3 — Code Scanner"></button><button aria-label="Mission 4 — Innovation Lab"></button><button aria-label="Mission 5 — Pro Link"></button><button aria-label="Mission 6 — Boss Final"></button>
+    </div>
+    <div class="note">MAQUETTE FIGÉE · INDEX.HTML NON MODIFIÉ</div>
+  </div>
+</main>
+</body></html>
