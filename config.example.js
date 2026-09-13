@@ -5,7 +5,7 @@ window.PGW_CONFIG = {
   venue: "Paris Expo – Porte de Versailles",
   defaultSessionCode: "PGW26",
   supabaseUrl: "https://VOTRE-PROJET.supabase.co",
-  supabaseAnonKey: "VOTRE_CLE_PUBLISHABLE_OU_ANON",
+  supabasePublishableKey: "VOTRE_CLE_PUBLISHABLE",
   allowLocalFallback: true,
   teacherEmailHint: "",
   officialSite: "https://www.parisgamesweek.com/fr"
