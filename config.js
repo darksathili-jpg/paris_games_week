@@ -9,5 +9,5 @@ window.PGW_CONFIG = {
 
   allowLocalFallback: true,
   teacherEmailHint: "tsautiere@aol.com",
-  officialSite: "https://www.parisgamesweek.com/fr"
+  officialSite: "https://darksathili-jpg.github.io/paris_games_week/"
 };
