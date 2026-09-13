@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-theme="dark">
+<html lang="fr" data-theme="dark" data-skin="cyber">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,7 +7,8 @@
   <meta name="description" content="Cockpit enseignant PGW NSI Quest 2026.">
   <title>Cockpit enseignant — PGW NSI Quest</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/app.css?v=20260913-3">
+  <link rel="stylesheet" href="css/app.css?v=20260913-v2">
+  <link rel="stylesheet" href="css/game-themes.css?v=20260913-v2">
 </head>
 <body class="teacher-body">
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
@@ -18,6 +19,12 @@
       <span><b>COCKPIT</b><small>ENSEIGNANT</small></span>
     </a>
     <div class="topbar-actions">
+      <label class="sr-only" for="skin-select">Choisir un univers visuel</label>
+      <select id="skin-select" class="skin-select" aria-label="Choisir un univers visuel" title="Univers visuel">
+        <option value="cyber">Cyber</option>
+        <option value="arcade">Arcade</option>
+        <option value="esport">eSport</option>
+      </select>
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="Changer de thème">◐</button>
       <a class="btn btn-ghost btn-small" href="index.html">← Élèves</a>
     </div>
@@ -33,9 +40,10 @@
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
-  <script src="config.js?v=20260913-3" defer></script>
-  <script src="js/content.js?v=20260913-3" defer></script>
-  <script src="js/supabase-client.js?v=20260913-3" defer></script>
-  <script src="js/teacher.js?v=20260913-3" defer></script>
+  <script src="config.js?v=20260913-v2" defer></script>
+  <script src="js/content.js?v=20260913-v2" defer></script>
+  <script src="js/supabase-client.js?v=20260913-v2" defer></script>
+  <script src="js/theme-system.js?v=20260913-v2" defer></script>
+  <script src="js/teacher.js?v=20260913-v2" defer></script>
 </body>
 </html>
