@@ -7,7 +7,7 @@
   <meta name="description" content="Cockpit enseignant PGW NSI Quest 2026.">
   <title>Cockpit enseignant — PGW NSI Quest</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=20260913-3">
 </head>
 <body class="teacher-body">
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
@@ -25,10 +25,17 @@
   <main id="teacher-app" class="app-shell"></main>
   <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
 
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch(() => {});
+      });
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
-  <script src="config.js" defer></script>
-  <script src="js/content.js" defer></script>
-  <script src="js/supabase-client.js" defer></script>
-  <script src="js/teacher.js" defer></script>
+  <script src="config.js?v=20260913-3" defer></script>
+  <script src="js/content.js?v=20260913-3" defer></script>
+  <script src="js/supabase-client.js?v=20260913-3" defer></script>
+  <script src="js/teacher.js?v=20260913-3" defer></script>
 </body>
 </html>
