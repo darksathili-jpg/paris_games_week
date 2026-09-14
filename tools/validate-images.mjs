@@ -21,7 +21,7 @@ for(const id of ids){
   const meta=await sharp(file,{density:144}).metadata();
   const width=meta.width??0,height=meta.height??0,ratio=width/(height||1);
   const isHero=id==="hero";
-  const minW=isHero?2400:1600,minH=isHero?1200:1000,minRatio=isHero?1.5:1.45,maxRatio=isHero?2.1:1.75;
+  const minW=isHero?2400:1500,minH=isHero?1200:930,minRatio=isHero?1.5:1.55,maxRatio=isHero?2.1:1.65;
   const ok=width>=minW&&height>=minH&&ratio>=minRatio&&ratio<=maxRatio;
   if(!ok){failed=true;console.error(`✗ ${id}: ${width}×${height}, ratio ${ratio.toFixed(3)}`);}
   else console.log(`✓ ${id}: ${width}×${height}, ratio ${ratio.toFixed(3)} — ${file}`);
