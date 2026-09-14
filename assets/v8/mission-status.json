@@ -20,9 +20,9 @@
       "notes": "Master validé (1586×992, ratio 1.599). Quality Gate SUCCESS. Variantes générées: WebP 52/92/178 KiB, AVIF 45/73/123 KiB en 480/720/1200. Déploiement Pages en cours."
     },
     "03": {
-      "state": "CANDIDATE",
-      "master": null,
-      "notes": "À produire après validation complète de Mission 02."
+      "state": "MASTER_APPROVED",
+      "master": "assets/v8/masters/mission-03.png",
+      "notes": "Master Code Scanner transféré et ART_GATE validé. Texte environnemental/diégétique autorisé; aucune UI HTML dupliquée."
     },
     "04": {
       "state": "CANDIDATE",

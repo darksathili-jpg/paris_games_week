@@ -74,4 +74,4 @@ jobs:
           fi
 
       - name: Visual smoke tests
-        run: npx playwright test --grep "aucune image de mission cassée"
+        run: npx playwright test --grep "images approuvees chargees sans erreur"
