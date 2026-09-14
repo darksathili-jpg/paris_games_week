@@ -5,7 +5,7 @@ const escapeHtml=(value)=>String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<"
 function missionCard(m){
   const ready=m.state==="ready";
   return `<article class="mission" style="--accent:${m.accent}" data-mission="${m.id}">
-    <div class="mission__media" aria-hidden="true">${m.id===1?'<img src="assets/v8/masters/mission-01.png" width="1600" height="1000" loading="lazy" decoding="async" alt="">':""}</div><div class="mission__shade" aria-hidden="true"></div>
+    <div class="mission__media" aria-hidden="true">${m.id===1?'<img src="assets/v8/masters/mission-01.png?v=4ceada6" width="1600" height="1000" loading="lazy" decoding="async" alt="">':""}</div><div class="mission__shade" aria-hidden="true"></div>
     <div class="mission__body">
       <div class="mission__top"><span class="mission__num">${String(m.id).padStart(2,"0")}</span><span class="mission__xp">+${m.xp} XP</span></div>
       <div class="mission__content"><span class="mission__label">${escapeHtml(m.label)}</span><h3>${escapeHtml(m.title)}</h3><p>${escapeHtml(m.description)}</p>
