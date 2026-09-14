@@ -17,12 +17,16 @@
   .hud{margin-top:.85rem;padding:.8rem;display:grid;grid-template-columns:68px 1fr;grid-template-areas:"title stats" "ring stats";align-items:center;gap:.25rem .7rem}
   .hud h2{grid-area:title;margin:0;text-align:center;font-size:.64rem}.ring{grid-area:ring;width:58px;margin:0 auto}.ring::after{inset:7px}.ring strong{font-size:.9rem}.hud__stats{grid-area:stats;grid-template-columns:1fr 1fr;font-size:.62rem}.hud__quote{display:none}
   .section{padding-top:1rem}.section__head h2{font-size:.92rem}.section__head p{font-size:.54rem;text-align:right}
-  .mission-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mission{min-height:215px}.mission__body{min-height:215px;padding:.75rem}.mission__num{width:36px;height:36px;font-size:.82rem}.mission__xp{font-size:.58rem;padding:.36rem .42rem}.mission__label{font-size:.52rem}.mission h3{font-size:.9rem}.mission p{font-size:.64rem}.mission__state{font-size:.54rem}.mission__button{min-width:40px;min-height:40px;padding:.45rem}
+  .mission-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mission{min-height:240px}.mission__body{min-height:240px;padding:.75rem}.mission__num{width:36px;height:36px;font-size:.82rem}.mission__xp{font-size:.58rem;padding:.36rem .42rem}.mission__label{font-size:.52rem}.mission h3{font-size:.9rem}.mission p{font-size:.64rem}.mission__state{font-size:.54rem}.mission__button{min-width:40px;min-height:40px;padding:.45rem}
   .info-grid{grid-template-columns:1fr}.panel p,.panel li{font-size:.72rem}
 }
 @media (max-width:390px){
   .hero__grid{padding-top:245px}
-  .mission-grid{grid-template-columns:1fr}
+  .mission-grid{grid-template-columns:1fr;gap:12px}
+  .mission{min-height:285px}.mission__body{min-height:285px;padding:.9rem}
+  .mission__num{width:42px;height:42px;font-size:.9rem}.mission__xp{font-size:.62rem}
+  .mission h3{font-size:1.05rem}.mission p{font-size:.72rem;max-width:34ch}
+  .mission__label,.mission__state{font-size:.58rem}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
