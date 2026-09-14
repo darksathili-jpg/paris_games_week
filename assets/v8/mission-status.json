@@ -15,9 +15,9 @@
       "notes": "Pilote validé. Pipeline AVIF/WebP, picture/srcset, cache et rendu contrôlés."
     },
     "02": {
-      "state": "MASTER_APPROVED",
+      "state": "RESPONSIVE_BUILD",
       "master": "assets/v8/masters/mission-02.png",
-      "notes": "Master Campus Scan transféré par l'utilisateur après ART_GATE. Prêt pour build responsive et intégration QA."
+      "notes": "Master validé (1586×992, ratio 1.599). Quality Gate SUCCESS. Variantes générées: WebP 52/92/178 KiB, AVIF 45/73/123 KiB en 480/720/1200. Déploiement Pages en cours."
     },
     "03": {
       "state": "CANDIDATE",
