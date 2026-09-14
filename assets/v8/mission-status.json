@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "states": [
+    "CANDIDATE",
+    "ART_GATE",
+    "MASTER_APPROVED",
+    "RESPONSIVE_BUILD",
+    "INTEGRATED",
+    "QA_PASSED"
+  ],
+  "missions": {
+    "01": {
+      "state": "QA_PASSED",
+      "master": "assets/v8/masters/mission-01.png",
+      "notes": "Pilote validé. Pipeline AVIF/WebP, picture/srcset, cache et rendu contrôlés."
+    },
+    "02": {
+      "state": "CANDIDATE",
+      "master": null,
+      "notes": "Candidate générée localement. Non validée, non intégrée."
+    },
+    "03": {
+      "state": "CANDIDATE",
+      "master": null,
+      "notes": "À produire après validation complète de Mission 02."
+    },
+    "04": {
+      "state": "CANDIDATE",
+      "master": null,
+      "notes": "À produire après validation complète de Mission 03."
+    },
+    "05": {
+      "state": "CANDIDATE",
+      "master": null,
+      "notes": "À produire après validation complète de Mission 04."
+    },
+    "06": {
+      "state": "CANDIDATE",
+      "master": null,
+      "notes": "À produire après validation complète de Mission 05."
+    }
+  }
+}
