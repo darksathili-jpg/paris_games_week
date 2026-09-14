@@ -47,6 +47,10 @@ jobs:
           node --check js/v8-quality.js
           node --check tools/validate-images.mjs
           node --check tools/build-images.mjs
+          node --check tools/check-mission-state.mjs
+
+      - name: Enforce mission production states
+        run: node tools/check-mission-state.mjs
 
       - name: Validate image masters when pilot exists
         shell: bash
