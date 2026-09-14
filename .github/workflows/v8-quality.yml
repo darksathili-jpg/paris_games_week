@@ -1,0 +1,67 @@
+name: V8 Quality Gate
+
+on:
+  push:
+    paths:
+      - 'preview-v8.html'
+      - 'css/v8-*.css'
+      - 'js/v8-*.js'
+      - 'tools/**'
+      - 'assets/v8/**'
+      - 'ART_DIRECTION_V8.md'
+      - 'IMAGE_PIPELINE_V8.md'
+      - 'package.json'
+      - '.github/workflows/v8-quality.yml'
+  pull_request:
+    paths:
+      - 'preview-v8.html'
+      - 'css/v8-*.css'
+      - 'js/v8-*.js'
+      - 'tools/**'
+      - 'assets/v8/**'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  v8-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install image tooling
+        run: npm install --no-package-lock --ignore-scripts=false
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check js/v8-data.js
+          node --check js/v8-app.js
+          node --check js/v8-quality.js
+          node --check tools/validate-images.mjs
+          node --check tools/build-images.mjs
+
+      - name: Validate image masters when pilot exists
+        shell: bash
+        run: |
+          if [ -f assets/v8/masters/mission-01.png ]; then
+            npm run images:validate
+          else
+            echo "Mission 01 master not present yet: image validation deferred."
+          fi
+
+      - name: Build image derivatives when pilot exists
+        shell: bash
+        run: |
+          if [ -f assets/v8/masters/mission-01.png ]; then
+            npm run images:build
+          else
+            echo "Mission 01 master not present yet: image build deferred."
+          fi
