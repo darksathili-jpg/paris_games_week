@@ -109,3 +109,34 @@ Si deux générations consécutives échouent au même critère :
 
 ## Règle de livraison
 Ne jamais dire qu'une mission est "construite" si son état n'est pas `QA_PASSED`.
+
+
+## Addendum 2026-09-14 — contrat de production réaliste
+Le générateur d'images peut produire une dimension voisine de la cible. La qualité ne doit jamais être jugée sur une différence arbitraire de quelques pixels.
+
+### Contrat master raster
+- ratio cible : 8:5 (1.6) avec tolérance 1.55–1.65 ;
+- largeur minimale acceptée : 1500 px ;
+- hauteur minimale acceptée : 930 px ;
+- largeur dérivée maximale : 1200 px ;
+- **aucun upscale** ;
+- une image conforme de 1585×992 est donc techniquement exploitable et supérieure à la dérivée maximale.
+
+### Contrat artistique
+Le contrôle artistique reste strict et indépendant des dimensions :
+- scène autonome ;
+- aucun texte lisible ou pseudo-texte dominant ;
+- aucun numéro, XP, badge, bouton, logo ou cadre UI ;
+- pas d'anomalie anatomique/structurelle évidente ;
+- point focal identifiable ;
+- zone basse compatible avec le voile et le contenu HTML ;
+- recadrage desktop et mobile viable.
+
+### Contrat QA
+La validation finale doit combiner :
+1. validation du master ;
+2. build responsive ;
+3. contrôle des URLs générées ;
+4. captures desktop/mobile reproductibles ;
+5. contrôle de régression visuelle ;
+6. audit Lighthouse/performance avant promotion.
