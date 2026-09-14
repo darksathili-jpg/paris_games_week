@@ -18,7 +18,13 @@
 </header>
 <main class="shell">
   <section class="hero" aria-labelledby="hero-title">
-    <div class="hero__art" aria-hidden="true"></div><div class="hero__stage" aria-hidden="true"></div>
+    <div class="hero__art" aria-hidden="true">
+  <picture class="hero__picture">
+    <source type="image/avif" srcset="assets/v8/generated/mission-01/mission-01-720.avif 720w, assets/v8/generated/mission-01/mission-01-1200.avif 1200w" sizes="(max-width:760px) 100vw, 52vw">
+    <source type="image/webp" srcset="assets/v8/generated/mission-01/mission-01-720.webp 720w, assets/v8/generated/mission-01/mission-01-1200.webp 1200w" sizes="(max-width:760px) 100vw, 52vw">
+    <img src="assets/v8/generated/mission-01/mission-01-1200.webp" alt="" width="1200" height="750" decoding="async" fetchpriority="high">
+  </picture>
+</div><div class="hero__stage" aria-hidden="true"><span class="hero__signal">LIVE FIELD QUEST</span></div>
     <div class="hero__grid">
       <div class="hero__copy">
         <p class="eyebrow">// OPÉRATION PGW // NSI FIELD QUEST</p>
@@ -30,8 +36,8 @@
         <div class="meta"><span class="chip">◆ Vendredi 23 octobre 2026 · 9 h 30 → 19 h</span><span class="chip">⌖ Paris Expo – Porte de Versailles</span><span class="chip"><span data-total-xp>1350</span> XP</span></div>
       </div>
       <aside class="hud" aria-label="Progression">
-        <h2>TA PROGRESSION</h2><div class="ring" aria-label="Progression 0 %"><strong>0%</strong></div>
-        <div class="hud__stats"><span>◎ 0 / 6 missions</span><span>☆ 0 XP</span><span>◉ 0 badge</span><span>♟ Enquêteur·se en herbe</span></div>
+        <h2>TA PROGRESSION</h2><div class="ring" data-progress-ring aria-label="Progression 0 %"><strong data-progress-percent>0%</strong></div>
+        <div class="hud__stats"><span>◎ <b data-progress-missions>0 / 6</b> missions</span><span>☆ <b data-progress-xp>0 XP</b></span><span>◉ <b data-progress-badges>0 badge</b></span><span>♟ <b data-progress-rank>Enquêteur·se en herbe</b></span></div>
         <div class="hud__quote">« L’informatique n’est pas seulement une technologie, c’est une façon de comprendre le monde. »</div>
       </aside>
     </div>
@@ -46,7 +52,16 @@
     <article class="panel"><h3>★ RÉCOMPENSES</h3><p>XP, badges et progression au fil des six missions. Six missions illustrées et optimisées pour mobile et desktop. Progression, XP et badges structurent le parcours d’enquête NSI.</p></article>
   </section>
 </main>
-<script type="module" src="js/v8-app.js?v=82artaudit"></script>
-<script type="module" src="js/v8-quality.js?v=82artaudit"></script>
+<div class="mission-drawer" data-mission-drawer hidden>
+  <div class="mission-drawer__backdrop" data-drawer-close></div>
+  <section class="mission-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <button class="mission-drawer__close" type="button" data-drawer-close aria-label="Fermer">×</button>
+    <div data-drawer-content></div>
+  </section>
+</div>
+<div class="v8-toast" data-v8-toast role="status" aria-live="polite"></div>
+<script src="js/content.js?v=83engine"></script>
+<script type="module" src="js/v8-app.js?v=83engine"></script>
+<script type="module" src="js/v8-quality.js?v=83engine"></script>
 </body>
 </html>
