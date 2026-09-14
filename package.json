@@ -6,7 +6,9 @@
   "scripts": {
     "images:validate": "node tools/validate-images.mjs",
     "images:build": "node tools/build-images.mjs",
-    "images:check": "npm run images:validate && npm run images:build"
+    "images:check": "npm run images:validate && npm run images:build",
+    "mission:state": "node tools/check-mission-state.mjs",
+    "quality:core": "npm run mission:state && npm run images:validate && npm run images:build"
   },
   "devDependencies": {
     "sharp": "^0.34.3"
