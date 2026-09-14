@@ -15,9 +15,9 @@
       "notes": "Pilote validé. Pipeline AVIF/WebP, picture/srcset, cache et rendu contrôlés."
     },
     "02": {
-      "state": "CANDIDATE",
-      "master": null,
-      "notes": "Candidate générée localement. Non validée, non intégrée."
+      "state": "MASTER_APPROVED",
+      "master": "assets/v8/masters/mission-02.png",
+      "notes": "Master Campus Scan transféré par l'utilisateur après ART_GATE. Prêt pour build responsive et intégration QA."
     },
     "03": {
       "state": "CANDIDATE",
