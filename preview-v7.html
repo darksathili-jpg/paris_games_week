@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#03101d"><title>PGW NSI Quest — V7.5.4</title>
+<meta name="theme-color" content="#03101d"><title>PGW NSI Quest — V7.6</title>
 <style>
 :root{--bg:#040712;--panel:#09142b;--line:#1a3b61;--txt:#f7fbff;--muted:#9eb0c7;--cyan:#51ecff;--blue:#5377ff;--purple:#9363ff;--pink:#ff4fc2;--green:#62efad;--orange:#ff995e;--yellow:#ffd862}
 *{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;color:var(--txt);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% 0,#10264e 0,#071126 34%,#040712 78%);overflow-x:hidden}
@@ -24,24 +24,37 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;ba
 @media(max-width:760px){.shell{width:min(100% - 20px,600px)}.hero-character{width:48%;max-height:280px;left:-8px;bottom:auto;top:18px;opacity:.98}.hero-character-glow{width:58%;height:280px;top:0;bottom:auto}.hero-art{background-position:64% top;background-size:auto 390px;opacity:.72}.top{height:64px}.brand img{width:42px;height:42px}.brand b{font-size:11px}.brand small{font-size:7px}.status{font-size:7px;padding:6px 8px}.hero{min-height:auto;border-radius:16px}.hero-art{background-position:34% top;background-size:auto 410px;background-repeat:no-repeat;opacity:.78}.hero:after{background:linear-gradient(180deg,rgba(3,8,20,.18),rgba(3,8,20,.58) 38%,rgba(3,8,20,.92) 66%)}.hero-grid{display:block;min-height:auto;padding:300px 14px 16px}.copy{padding:0;text-align:left}.kicker{font-size:7px}.copy h1{font-size:40px}.quest{font-size:16px;letter-spacing:.2em}.tagline{font-size:7px}.desc{font-size:10px;line-height:1.5}.start{padding:12px 13px;font-size:11px;margin-top:14px}.meta{margin-top:10px;gap:5px}.meta span{font-size:6.5px;padding:6px}.progress{margin-top:12px;padding:12px;display:grid;grid-template-columns:74px 1fr;grid-template-areas:"title stats" "ring stats";gap:4px 10px;align-items:center}.progress h2{grid-area:title;font-size:8px;margin:0;text-align:center}.ring{grid-area:ring;width:62px;height:62px;margin:0 auto}.ring:before{inset:7px}.ring b{font-size:14px}.stats{grid-area:stats;grid-template-columns:1fr 1fr;gap:7px;font-size:8px}.stats span{gap:4px}.quote{display:none}.missions{padding-top:13px}.section-title h2{font-size:12px}.section-title span{font-size:6.5px}.grid{grid-template-columns:repeat(2,1fr);gap:8px}.card{min-height:215px;padding:11px}.num{width:36px;height:36px;font-size:14px}.card small{font-size:6px;margin-top:88px}.card h3{font-size:13px}.card p{font-size:8px;max-width:82%}.xp{right:9px;top:9px;font-size:7px;padding:6px 7px}.state{right:9px;bottom:9px;font-size:6.5px}.info{grid-template-columns:1fr;padding-bottom:28px}.info article{padding:14px}.info h3{font-size:9px}.info p,.info li{font-size:9px}}
 @media(max-width:390px){.hero-grid{padding-top:270px}.grid{grid-template-columns:1fr 1fr}.card{min-height:170px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+@keyframes gridDrift{to{background-position:38px 38px,38px 38px}}
+@keyframes pulseGlow{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:.8;transform:scale(1.08)}}
+@keyframes scan{0%{transform:translateY(-12vh);opacity:0}15%,85%{opacity:.35}100%{transform:translateY(112vh);opacity:0}}
+@keyframes statusPulse{50%{box-shadow:0 0 22px #51ecff55}}
+body:before{animation:gridDrift 14s linear infinite}
+.hero-character-glow{animation:pulseGlow 4.5s ease-in-out infinite}
+.status{animation:statusPulse 2.4s ease-in-out infinite}
+.hero-scan{position:absolute;z-index:3;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#62efff,transparent);box-shadow:0 0 18px #51ecff;pointer-events:none;animation:scan 6s linear infinite}
+.card{cursor:pointer}.card:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+.card.locked{filter:saturate(.8)}.card.locked:hover{filter:saturate(1)}
+@media(max-width:760px){body:before{animation-duration:20s}.hero-scan{animation-duration:8s}.card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){body:before,.hero-character-glow,.status,.hero-scan{animation:none!important}}
 </style>
 </head>
 <body>
-<header class="top shell"><div class="brand"><img src="assets/watteau-logo.svg" alt=""><span><b>LYCÉE WATTEAU</b><small>VALENCIENNES // TERMINALE NSI</small></span></div><div class="status">● V7.5.4 · VERIFIED MISSIONS</div></header>
+<header class="top shell"><div class="brand"><img src="assets/watteau-logo.svg" alt=""><span><b>LYCÉE WATTEAU</b><small>VALENCIENNES // TERMINALE NSI</small></span></div><div class="status">● V7.6 · MOTION PASS</div></header>
 <main class="shell">
-<section class="hero">
+<section class="hero"><div class="hero-scan" aria-hidden="true"></div>
 <div class="hero-art" aria-hidden="true"></div><div class="hero-character-glow" aria-hidden="true"></div><div class="hero-character" aria-hidden="true"></div>
 <div class="hero-grid">
 <div class="copy"><div class="kicker">// OPÉRATION PGW // NSI FIELD QUEST</div><h1>OPÉRATION <span>PGW 2026</span></h1><div class="quest">NSI · QUEST</div><div class="tagline">EXPLORE · APPRENDS · RÉSOUS · PROGRESSE</div><p class="desc">Transforme ta visite en enquête d’informatique. Observe, questionne, compare et relie ce que tu vois aux notions de Terminale NSI.</p><button class="start" onclick="document.getElementById('missions').scrollIntoView({behavior:'smooth'})"><span>ENTRER DANS LA MISSION</span><span>›</span></button><div class="meta"><span>◆ Vendredi 23 octobre 2026 · 9 h 30 → 19 h</span><span>⌖ Paris Expo – Porte de Versailles</span><span>XP 1350</span></div></div>
 <aside class="progress"><h2>TA PROGRESSION</h2><div class="ring"><b>0%</b></div><div class="stats"><span><i>◎</i>0 / 6 missions</span><span><i>☆</i>0 XP</span><span><i>◉</i>0 badge</span><span><i>♟</i>Enquêteur·se en herbe</span></div><div class="quote">« L’informatique n’est pas seulement une technologie, c’est une façon de comprendre le monde. »</div></aside>
 </div></section>
 <section class="missions" id="missions"><div class="section-title"><h2>CARTE DES MISSIONS</h2><span>6 NIVEAUX // 1350 XP À DÉBLOQUER</span></div><div class="grid">
-<article class="card" data-glyph="◫"><span class="num">01</span><small>MISSION 01</small><h3>Launch Zone</h3><p>Préparer sa stratégie avant de se disperser dans le salon.</p><span class="xp">+100 XP</span><span class="state ready">● READY</span></article>
-<article class="card" data-glyph="⌁"><span class="num">02</span><small>MISSION 02</small><h3>Campus Scan</h3><p>Comparer deux formations avec des critères vérifiables.</p><span class="xp">+200 XP</span><span class="state">◇ LOCKED</span></article>
-<article class="card" data-glyph="⌘"><span class="num">03</span><small>MISSION 03</small><h3>Code Scanner</h3><p>Identifier les mécanismes NSI invisibles derrière un jeu ou une démo.</p><span class="xp">+300 XP</span><span class="state">◇ LOCKED</span></article>
-<article class="card" data-glyph="◎"><span class="num">04</span><small>MISSION 04</small><h3>Innovation Lab</h3><p>Analyser IA, données, automatisation et fiabilité au-delà du discours commercial.</p><span class="xp">+250 XP</span><span class="state">◇ LOCKED</span></article>
-<article class="card" data-glyph="◇"><span class="num">05</span><small>MISSION 05</small><h3>Pro Link</h3><p>Rencontrer une personne du numérique et comprendre son parcours réel.</p><span class="xp">+200 XP</span><span class="state">◇ LOCKED</span></article>
-<article class="card" data-glyph="★"><span class="num">06</span><small>MISSION 06</small><h3>Boss Final</h3><p>Construire un bilan argumenté sur informatique, études et orientation.</p><span class="xp">+300 XP</span><span class="state">◇ LOCKED</span></article>
+<article class="card" data-glyph="◫" tabindex="0"><span class="num">01</span><small>MISSION 01</small><h3>Launch Zone</h3><p>Préparer sa stratégie avant de se disperser dans le salon.</p><span class="xp">+100 XP</span><span class="state ready">● READY</span></article>
+<article class="card locked" data-glyph="⌁" tabindex="0"><span class="num">02</span><small>MISSION 02</small><h3>Campus Scan</h3><p>Comparer deux formations avec des critères vérifiables.</p><span class="xp">+200 XP</span><span class="state">◇ LOCKED</span></article>
+<article class="card locked" data-glyph="⌘" tabindex="0"><span class="num">03</span><small>MISSION 03</small><h3>Code Scanner</h3><p>Identifier les mécanismes NSI invisibles derrière un jeu ou une démo.</p><span class="xp">+300 XP</span><span class="state">◇ LOCKED</span></article>
+<article class="card locked" data-glyph="◎" tabindex="0"><span class="num">04</span><small>MISSION 04</small><h3>Innovation Lab</h3><p>Analyser IA, données, automatisation et fiabilité au-delà du discours commercial.</p><span class="xp">+250 XP</span><span class="state">◇ LOCKED</span></article>
+<article class="card locked" data-glyph="◇" tabindex="0"><span class="num">05</span><small>MISSION 05</small><h3>Pro Link</h3><p>Rencontrer une personne du numérique et comprendre son parcours réel.</p><span class="xp">+200 XP</span><span class="state">◇ LOCKED</span></article>
+<article class="card locked" data-glyph="★" tabindex="0"><span class="num">06</span><small>MISSION 06</small><h3>Boss Final</h3><p>Construire un bilan argumenté sur informatique, études et orientation.</p><span class="xp">+300 XP</span><span class="state">◇ LOCKED</span></article>
 </div></section>
 <section class="info"><article><h3>◉ ÉVÉNEMENT</h3><p><b>Paris Games Week 2026</b><br>Vendredi 23 octobre · Paris Expo – Porte de Versailles.</p></article><article><h3>⌁ TA MISSION</h3><ul><li>Observer les technologies et usages.</li><li>Interroger les formations et les professionnels.</li><li>Relier les observations au programme de Terminale NSI.</li></ul></article><article><h3>★ RÉCOMPENSES</h3><div class="rewards"><span class="reward">◇</span><span class="reward">⚡</span><span class="reward">★</span><span class="reward">◎</span></div><p>XP, badges et progression au fil des six missions.</p></article></section>
 </main>
