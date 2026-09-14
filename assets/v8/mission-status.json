@@ -35,9 +35,9 @@
       "notes": "Quality Gate SUCCESS. Master 1584×993, ratio 1.595; dérivés WebP 44/79/153 KiB et AVIF 36/59/98 KiB; smoke test Playwright 3/3 passé."
     },
     "06": {
-      "state": "CANDIDATE",
-      "master": null,
-      "notes": "À produire après validation complète de Mission 05."
+      "state": "MASTER_APPROVED",
+      "master": "assets/v8/masters/mission-06.png",
+      "notes": "Master Boss Final transféré après validation artistique. Scène finale distincte de Pro Link; cohérente avec l'aboutissement du parcours."
     }
   }
 }
