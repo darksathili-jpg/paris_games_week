@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#020611">
+<meta name="description" content="Prototype V8 de l'application PGW NSI 2026 — Lycée Watteau.">
+<title>PGW NSI Quest — V8</title>
+<link rel="stylesheet" href="css/v8-components.css">
+<link rel="stylesheet" href="css/v8-responsive.css">
+</head>
+<body>
+<a class="skip-link" href="#missions">Aller aux missions</a>
+<header class="topbar shell">
+  <div class="brand"><img src="assets/watteau-logo.svg" width="52" height="52" alt="Logo du lycée Watteau"><span><strong>LYCÉE WATTEAU</strong><small>VALENCIENNES // TERMINALE NSI</small></span></div>
+  <div class="version">● V8 · CLEAN CORE</div>
+</header>
+<main class="shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__art" aria-hidden="true"></div><div class="hero__stage" aria-hidden="true"></div>
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">// OPÉRATION PGW // NSI FIELD QUEST</p>
+        <h1 id="hero-title">OPÉRATION <span>PGW 2026</span></h1>
+        <div class="quest">NSI · QUEST</div>
+        <p class="tagline">EXPLORE · APPRENDS · RÉSOUS · PROGRESSE</p>
+        <p class="lede">Transforme ta visite en enquête d’informatique. Observe, questionne, compare et relie ce que tu vois aux notions de Terminale NSI.</p>
+        <a class="cta" href="#missions" data-enter><span>ENTRER DANS LA MISSION</span><span aria-hidden="true">›</span></a>
+        <div class="meta"><span class="chip">◆ Vendredi 23 octobre 2026 · 9 h 30 → 19 h</span><span class="chip">⌖ Paris Expo – Porte de Versailles</span><span class="chip"><span data-total-xp>1350</span> XP</span></div>
+      </div>
+      <aside class="hud" aria-label="Progression">
+        <h2>TA PROGRESSION</h2><div class="ring" aria-label="Progression 0 %"><strong>0%</strong></div>
+        <div class="hud__stats"><span>◎ 0 / 6 missions</span><span>☆ 0 XP</span><span>◉ 0 badge</span><span>♟ Enquêteur·se en herbe</span></div>
+        <div class="hud__quote">« L’informatique n’est pas seulement une technologie, c’est une façon de comprendre le monde. »</div>
+      </aside>
+    </div>
+  </section>
+  <section class="section" id="missions" aria-labelledby="missions-title">
+    <div class="section__head"><h2 id="missions-title">CARTE DES MISSIONS</h2><p>6 NIVEAUX // <span data-total-xp>1350</span> XP À DÉBLOQUER</p></div>
+    <div class="mission-grid" data-mission-grid></div>
+  </section>
+  <section class="info-grid" aria-label="Informations">
+    <article class="panel"><h3>◉ ÉVÉNEMENT</h3><p><strong>Paris Games Week 2026</strong><br>Vendredi 23 octobre · Paris Expo – Porte de Versailles.</p></article>
+    <article class="panel"><h3>⌁ TA MISSION</h3><ul><li>Observer les technologies et usages.</li><li>Interroger les formations et les professionnels.</li><li>Relier les observations au programme de Terminale NSI.</li></ul></article>
+    <article class="panel"><h3>★ RÉCOMPENSES</h3><p>XP, badges et progression au fil des six missions. Les illustrations V8 seront ajoutées uniquement après validation du pipeline graphique.</p></article>
+  </section>
+</main>
+<script type="module" src="js/v8-app.js"></script>
+</body>
+</html>
