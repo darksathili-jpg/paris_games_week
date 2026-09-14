@@ -24,9 +24,7 @@ a{color:inherit}.shell{width:min(1440px,calc(100% - 32px));margin-inline:auto}
 .section{padding:2rem 0 .5rem}.section__head{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1rem}.section__head h2{margin:0;font-size:var(--step-1);letter-spacing:.08em}.section__head p{margin:0;color:#7489a7;font:800 .66rem var(--font-mono);letter-spacing:.1em}
 .mission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .mission{--accent:var(--cyan);container-type:inline-size;position:relative;min-height:260px;overflow:hidden;border:1px solid color-mix(in srgb,var(--accent) 58%,transparent);border-radius:var(--radius-md);background:#071126;box-shadow:0 18px 42px rgba(0,0,0,.28);isolation:isolate;transition:transform .2s ease,border-color .2s ease}.mission:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 88%,white 8%)}.mission:focus-within{outline:2px solid var(--accent);outline-offset:3px}
-.mission__media{position:absolute;inset:0;z-index:0;background:
-radial-gradient(circle at 70% 25%,color-mix(in srgb,var(--accent) 26%,transparent),transparent 34%),
-linear-gradient(145deg,color-mix(in srgb,var(--accent) 12%,#0c1a34),#050914 70%)}.mission__media::before{content:"";position:absolute;inset:12% 9% 36%;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.02),transparent);box-shadow:inset 0 0 46px color-mix(in srgb,var(--accent) 9%,transparent)}.mission__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 16%,rgba(2,6,16,.1) 38%,rgba(3,7,18,.9) 76%,#040812 100%)}
+.mission__media{position:absolute;inset:0;z-index:0;background:#071126}.mission__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(2,6,16,.03) 0%,rgba(2,6,16,.08) 32%,rgba(3,7,18,.58) 60%,rgba(4,8,18,.94) 84%,#040812 100%)}
 .mission__body{position:relative;z-index:2;min-height:260px;padding:1rem;display:flex;flex-direction:column}.mission__top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}.mission__num{display:grid;place-items:center;width:46px;height:46px;border-radius:10px;background:var(--accent);color:#061021;font-weight:1000;font-style:italic;box-shadow:0 0 25px color-mix(in srgb,var(--accent) 28%,transparent)}.mission__xp{padding:.45rem .55rem;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:8px;background:rgba(5,13,31,.88);font:900 .7rem var(--font-mono)}.mission__content{margin-top:auto}.mission__label{color:var(--accent);font:900 .62rem var(--font-mono);letter-spacing:.12em}.mission h3{margin:.35rem 0 .4rem;font-size:var(--step-1)}.mission p{margin:0;max-width:36ch;color:#c8d4e4;font-size:.78rem;line-height:1.45}.mission__footer{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:.8rem}.mission__state{font:800 .66rem var(--font-mono);color:#7f92af}.mission__state.is-ready{color:var(--green)}.mission__button{min-width:44px;min-height:44px;padding:.55rem .75rem;border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);border-radius:9px;background:rgba(7,18,37,.86);color:white;font-weight:800;cursor:pointer}.mission__button:hover{background:color-mix(in srgb,var(--accent) 18%,#071225)}
 .info-grid{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:14px;padding:1rem 0 3rem}.panel{padding:1rem;border:1px solid #183b5d;border-radius:var(--radius-md);background:rgba(7,19,41,.78)}.panel h3{margin:0 0 .65rem;color:var(--cyan);font-size:.72rem;letter-spacing:.08em}.panel p,.panel li{color:#9fb0c8;font-size:.78rem;line-height:1.55}.panel ul{padding-left:1.1rem;margin:.4rem 0}
 @container (max-width:340px){.mission__body{padding:.75rem}.mission h3{font-size:1rem}.mission p{font-size:.72rem}.mission__num{width:38px;height:38px}.mission__xp{font-size:.62rem}}
@@ -35,7 +33,15 @@ linear-gradient(145deg,color-mix(in srgb,var(--accent) 12%,#0c1a34),#050914 70%)
 .mission{contain:layout paint style}
 .mission__button:focus-visible,.cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
-/* Mission 01 pilot — validated master integration */
-.mission__media>picture{position:absolute;inset:0;display:block}.mission__media>picture>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%;display:block}
-.mission[data-mission="1"] .mission__media::before{display:none}
-.mission[data-mission="1"] .mission__shade{background:linear-gradient(180deg,rgba(2,6,16,.04) 0%,rgba(2,6,16,.12) 34%,rgba(3,7,18,.72) 68%,#040812 100%)}
+/* V8.2 mission art pass — one clean image layer, HTML owns all UI */
+.mission__media>picture{position:absolute;inset:0;display:block}.mission__media>picture>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.mission[data-mission="1"] .mission__media img{object-position:center 46%}
+.mission[data-mission="2"] .mission__media img{object-position:center 43%}
+.mission[data-mission="3"] .mission__media img{object-position:center 42%}
+.mission[data-mission="4"] .mission__media img{object-position:56% 43%}
+.mission[data-mission="5"] .mission__media img{object-position:center 42%}
+.mission[data-mission="6"] .mission__media img{object-position:center 38%}
+.mission__content{padding-top:2.4rem;text-shadow:0 2px 14px rgba(0,0,0,.88)}
+.mission__top{position:relative;z-index:3}
+.mission__xp{backdrop-filter:blur(7px)}
+.mission__button:disabled{opacity:.52;cursor:not-allowed}
