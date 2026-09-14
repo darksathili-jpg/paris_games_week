@@ -23,6 +23,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install V8 image tooling
+        run: npm install --no-package-lock --ignore-scripts=false
+
+      - name: Validate V8 image masters
+        shell: bash
+        run: |
+          if [ -f assets/v8/masters/mission-01.png ]; then
+            npm run images:validate
+          else
+            echo "No V8 pilot master yet: skipping image validation."
+          fi
+
+      - name: Build V8 responsive images
+        shell: bash
+        run: |
+          if [ -f assets/v8/masters/mission-01.png ]; then
+            npm run images:build
+          else
+            echo "No V8 pilot master yet: skipping image build."
+          fi
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
