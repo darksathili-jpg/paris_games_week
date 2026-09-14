@@ -30,9 +30,9 @@
       "notes": "Master Innovation Lab transféré après ART_GATE. Texte diégétique accepté; composition innovation/prototypage validée."
     },
     "05": {
-      "state": "CANDIDATE",
-      "master": null,
-      "notes": "À produire après validation complète de Mission 04."
+      "state": "MASTER_APPROVED",
+      "master": "assets/v8/masters/mission-05.png",
+      "notes": "Master Pro Link transféré après ART_GATE. Rencontre élève-professionnel crédible; texte environnemental naturel accepté; aucune duplication de l'UI de mission."
     },
     "06": {
       "state": "CANDIDATE",
