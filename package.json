@@ -8,9 +8,14 @@
     "images:build": "node tools/build-images.mjs",
     "images:check": "npm run images:validate && npm run images:build",
     "mission:state": "node tools/check-mission-state.mjs",
-    "quality:core": "npm run mission:state && npm run images:validate && npm run images:build"
+    "quality:core": "npm run mission:state && npm run images:validate && npm run images:build",
+    "serve:v8": "npx http-server . -p 4173 -c-1",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
   },
   "devDependencies": {
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
+    "@playwright/test": "^1.55.0",
+    "http-server": "^14.1.1"
   }
 }
