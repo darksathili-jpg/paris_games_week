@@ -1,0 +1,37 @@
+:root{
+  color-scheme:dark;
+  --bg-0:#020611;
+  --bg-1:#071225;
+  --bg-2:#0b1730;
+  --surface:rgba(8,19,40,.82);
+  --surface-strong:#0b1730;
+  --line:rgba(126,231,255,.18);
+  --text:#f7fbff;
+  --muted:#9fb0c8;
+  --cyan:#57efff;
+  --blue:#6787ff;
+  --violet:#9a6cff;
+  --pink:#ff5dc8;
+  --green:#62efad;
+  --orange:#ff9a61;
+  --yellow:#ffd85e;
+  --danger:#ff6a7a;
+  --shadow:0 24px 70px rgba(0,0,0,.38);
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:24px;
+  --space-1:.5rem;
+  --space-2:.75rem;
+  --space-3:1rem;
+  --space-4:1.5rem;
+  --space-5:2rem;
+  --space-6:3rem;
+  --font-ui:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  --step--1:clamp(.76rem,.72rem + .16vw,.86rem);
+  --step-0:clamp(.92rem,.86rem + .24vw,1.06rem);
+  --step-1:clamp(1.05rem,.98rem + .35vw,1.28rem);
+  --step-2:clamp(1.3rem,1.18rem + .55vw,1.65rem);
+  --step-3:clamp(1.8rem,1.45rem + 1.3vw,2.7rem);
+  --step-4:clamp(2.8rem,2rem + 3vw,5.6rem);
+}
