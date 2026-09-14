@@ -20,19 +20,19 @@
       "notes": "Master validé (1586×992, ratio 1.599). Quality Gate SUCCESS. Variantes générées: WebP 52/92/178 KiB, AVIF 45/73/123 KiB en 480/720/1200. Déploiement Pages en cours."
     },
     "03": {
-      "state": "MASTER_APPROVED",
+      "state": "RESPONSIVE_BUILD",
       "master": "assets/v8/masters/mission-03.png",
-      "notes": "Master Code Scanner transféré et ART_GATE validé. Texte environnemental/diégétique autorisé; aucune UI HTML dupliquée."
+      "notes": "Quality Gate global SUCCESS via run Mission 05. Master 1586×992, ratio 1.599; dérivés AVIF/WebP 480/720/1200 générés; smoke test Playwright passé."
     },
     "04": {
-      "state": "MASTER_APPROVED",
+      "state": "RESPONSIVE_BUILD",
       "master": "assets/v8/masters/mission-04.png",
-      "notes": "Master Innovation Lab transféré après ART_GATE. Texte diégétique accepté; composition innovation/prototypage validée."
+      "notes": "Quality Gate global SUCCESS via run Mission 05. Master 1584×993, ratio 1.595; dérivés AVIF/WebP 480/720/1200 générés; smoke test Playwright passé."
     },
     "05": {
-      "state": "CANDIDATE",
-      "master": null,
-      "notes": "À produire après validation complète de Mission 04."
+      "state": "RESPONSIVE_BUILD",
+      "master": "assets/v8/masters/mission-05.png",
+      "notes": "Quality Gate SUCCESS. Master 1584×993, ratio 1.595; dérivés WebP 44/79/153 KiB et AVIF 36/59/98 KiB; smoke test Playwright 3/3 passé."
     },
     "06": {
       "state": "CANDIDATE",
