@@ -27,3 +27,26 @@ test("images approuvees chargees sans erreur",async({page})=>{
  }
  expect(failures).toEqual([]);
 });
+
+
+test("progression séquentielle et persistance locale",async({page})=>{
+  await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+  await page.evaluate(()=>localStorage.removeItem("pgw-v8-progress-v1"));
+  await page.reload({waitUntil:"networkidle"});
+  await expect(page.locator('.mission[data-mission="1"] [data-open-mission="1"]')).toBeEnabled();
+  await expect(page.locator('.mission[data-mission="2"] [data-open-mission="2"]')).toBeDisabled();
+
+  await page.locator('[data-open-mission="1"]').click();
+  await page.locator('[data-answer="interests"]').first().check();
+  await page.locator('[data-answer="objectives"]').fill("Comprendre un mécanisme réseau concret et comparer une formation post-bac adaptée à mon profil NSI.");
+  await page.locator('[data-mission-form="1"] button[type="submit"]').click();
+
+  await expect(page.locator('.mission[data-mission="1"]')).toHaveClass(/is-complete/);
+  await expect(page.locator('.mission[data-mission="2"] [data-open-mission="2"]')).toBeEnabled();
+  await expect(page.locator("[data-progress-xp]").first()).toHaveText("100 XP");
+
+  await page.reload({waitUntil:"networkidle"});
+  await expect(page.locator('.mission[data-mission="1"]')).toHaveClass(/is-complete/);
+  await expect(page.locator('.mission[data-mission="2"] [data-open-mission="2"]')).toBeEnabled();
+  await expect(page.locator("[data-progress-xp]").first()).toHaveText("100 XP");
+});
