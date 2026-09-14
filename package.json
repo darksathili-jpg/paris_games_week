@@ -1,0 +1,14 @@
+{
+  "name": "pgw-nsi-quest",
+  "private": true,
+  "version": "8.0.0",
+  "type": "module",
+  "scripts": {
+    "images:validate": "node tools/validate-images.mjs",
+    "images:build": "node tools/build-images.mjs",
+    "images:check": "npm run images:validate && npm run images:build"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.3"
+  }
+}
