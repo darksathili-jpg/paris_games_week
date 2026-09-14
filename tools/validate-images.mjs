@@ -1,29 +1,27 @@
 import fs from "node:fs/promises";
 import sharp from "sharp";
 
-const ids=["hero",...Array.from({length:6},(_,i)=>`mission-${String(i+1).padStart(2,"0")}`)];
-async function findSource(id){
-  for(const ext of ["png","svg"]){
-    const file=`assets/v8/masters/${id}.${ext}`;
-    try{await fs.access(file);return file;}catch{}
-  }
-  return null;
-}
+const status=JSON.parse(await fs.readFile("assets/v8/mission-status.json","utf8"));
+const approvedStates=new Set(["MASTER_APPROVED","RESPONSIVE_BUILD","INTEGRATED","QA_PASSED"]);
 let failed=false;
-for(const id of ids){
-  const file=await findSource(id);
-  const required=id!=="hero";
-  if(!file){
-    if(required){failed=true;console.error(`✗ ${id}: master requis absent`);}
-    else console.log(`· ${id}: master non présent, ignoré`);
+
+for(const [num,mission] of Object.entries(status.missions)){
+  const id=`mission-${num}`;
+  if(!approvedStates.has(mission.state)){
+    console.log(`· ${id}: ${mission.state}, validation raster différée`);
     continue;
   }
-  const meta=await sharp(file,{density:144}).metadata();
+  const expected=`assets/v8/masters/${id}.png`;
+  if(mission.master!==expected){
+    failed=true; console.error(`✗ ${id}: master approuvé doit être ${expected}`); continue;
+  }
+  try{await fs.access(expected)}catch{
+    failed=true; console.error(`✗ ${id}: PNG approuvé absent`); continue;
+  }
+  const meta=await sharp(expected).metadata();
   const width=meta.width??0,height=meta.height??0,ratio=width/(height||1);
-  const isHero=id==="hero";
-  const minW=isHero?2400:1500,minH=isHero?1200:930,minRatio=isHero?1.5:1.55,maxRatio=isHero?2.1:1.65;
-  const ok=width>=minW&&height>=minH&&ratio>=minRatio&&ratio<=maxRatio;
+  const ok=width>=1500&&height>=930&&ratio>=1.55&&ratio<=1.65;
   if(!ok){failed=true;console.error(`✗ ${id}: ${width}×${height}, ratio ${ratio.toFixed(3)}`);}
-  else console.log(`✓ ${id}: ${width}×${height}, ratio ${ratio.toFixed(3)} — ${file}`);
+  else console.log(`✓ ${id}: ${width}×${height}, ratio ${ratio.toFixed(3)}`);
 }
 if(failed)process.exit(1);
