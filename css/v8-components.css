@@ -36,6 +36,6 @@ linear-gradient(145deg,color-mix(in srgb,var(--accent) 12%,#0c1a34),#050914 70%)
 .mission__button:focus-visible,.cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
 /* Mission 01 pilot — validated master integration */
-.mission__media>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%;display:block}
+.mission__media>picture{position:absolute;inset:0;display:block}.mission__media>picture>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%;display:block}
 .mission[data-mission="1"] .mission__media::before{display:none}
 .mission[data-mission="1"] .mission__shade{background:linear-gradient(180deg,rgba(2,6,16,.04) 0%,rgba(2,6,16,.12) 34%,rgba(3,7,18,.72) 68%,#040812 100%)}
