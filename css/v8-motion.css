@@ -1,0 +1,8 @@
+@keyframes gridDrift{to{background-position:44px 44px,44px 44px}}
+@keyframes ambientPulse{0%,100%{opacity:.58;transform:scale(1)}50%{opacity:.78;transform:scale(1.04)}}
+@keyframes ringScan{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+body::before{animation:gridDrift 18s linear infinite}
+.hero__art::before{animation:ambientPulse 6s ease-in-out infinite}
+.hero__art::after{animation:ambientPulse 7.5s ease-in-out infinite reverse}
+.ring::before{content:"";position:absolute;inset:-4px;border-radius:50%;border-top:1px solid rgba(87,239,255,.75);border-right:1px solid transparent;animation:ringScan 7s linear infinite}
+@media (prefers-reduced-motion:reduce){body::before,.hero__art::before,.hero__art::after,.ring::before{animation:none!important}}
