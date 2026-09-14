@@ -1,4 +1,4 @@
-const CACHE = "pgw-nsi-quest-v1.6.0";
+const CACHE = "pgw-nsi-quest-v1.6.1";
 const APP_SHELL = [
   "./", "./index.html", "./teacher.html", "./config.js", "./manifest.webmanifest",
   "./css/app.css", "./css/v6-game.css",
@@ -27,7 +27,14 @@ self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
   if (url.origin === location.origin) {
+    const isV8Preview =
+      url.pathname.endsWith("/preview-v8.html") ||
+      url.pathname.includes("/css/v8-") ||
+      url.pathname.includes("/js/v8-") ||
+      url.pathname.includes("/assets/v8/");
+
     const isFreshCritical =
+      isV8Preview ||
       event.request.mode === "navigate" ||
       url.pathname.endsWith("/config.js") ||
       url.pathname.endsWith("/js/supabase-client.js") ||
