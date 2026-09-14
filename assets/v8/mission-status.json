@@ -25,9 +25,9 @@
       "notes": "Master Code Scanner transféré et ART_GATE validé. Texte environnemental/diégétique autorisé; aucune UI HTML dupliquée."
     },
     "04": {
-      "state": "CANDIDATE",
-      "master": null,
-      "notes": "À produire après validation complète de Mission 03."
+      "state": "MASTER_APPROVED",
+      "master": "assets/v8/masters/mission-04.png",
+      "notes": "Master Innovation Lab transféré après ART_GATE. Texte diégétique accepté; composition innovation/prototypage validée."
     },
     "05": {
       "state": "CANDIDATE",
