@@ -54,3 +54,11 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Synchronisation cockpit : affiche la dernière remontée connue côté serveur. Ne prétend jamais connaître une queue hors ligne non encore remontée.
 - Export CSV : pseudo, classe, missions terminées, progression, XP, dernière remontée et réponses pédagogiques.
 - Limite assumée : un élève hors ligne peut avoir une queue locale invisible au serveur ; le cockpit signale donc la fraîcheur de la dernière remontée, pas un faux état « pending » distant.
+
+
+## TEACHER UX/ART GATE — V8.10 — VALIDÉ TERRAIN
+- Validation humaine du rendu réel : OK.
+- Ancien sélecteur Cyber / Arcade / eSport retiré définitivement.
+- Cockpit aligné sur l'identité V8, avec densité adaptée au rôle enseignant.
+- Pipeline élève et six masters mission gelés : aucune modification nécessaire.
+- Régression automatisée : shell enseignant V8 présent, héritage visuel absent, thème accessible, pas de débordement horizontal sur les viewports du gate.
