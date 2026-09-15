@@ -293,3 +293,29 @@ test("teacher public shell V8.10 sans héritage visuel",async({page})=>{
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+2);
   expect(overflow).toBeFalsy();
 });
+
+
+test("FIELD safe-exit bloque le départ hors ligne puis confirme après rattrapage",async({page,context})=>{
+  test.setTimeout(60000);
+  const pseudo="QA-FIELD-"+Date.now();
+  await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+  await page.evaluate(()=>{for(const k of Object.keys(localStorage))if(k.startsWith("pgw-v8"))localStorage.removeItem(k);sessionStorage.clear();});
+  await page.reload({waitUntil:"networkidle"});
+  await page.locator("[data-join-open]").click();
+  await page.locator('[data-join-form] input[name="code"]').fill("PGW26");
+  await page.locator('[data-join-form] input[name="classe"]').fill("QA-FIELD");
+  await page.locator('[data-join-form] input[name="pseudo"]').fill(pseudo);
+  await page.locator('[data-join-form] button[type="submit"]').click();
+  await expect(page.locator("[data-join-open]")).toContainText(pseudo,{timeout:15000});
+  await context.setOffline(true); await page.evaluate(()=>window.dispatchEvent(new Event("offline")));
+  await page.locator('[data-open-mission="1"]').click();
+  await page.locator('[data-answer="interests"][value="Développement / programmation"]').check();
+  await page.locator('[data-answer="objectives"]').fill("Tester le contrôle terrain de synchronisation avant le départ du salon.");
+  await page.locator('[data-mission-form="1"] button[type="submit"]').click();
+  await expect(page.locator("[data-field-exit]")).toContainText("Ne ferme pas");
+  await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","false");
+  await context.setOffline(false); await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+  await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
+  await expect(page.locator("[data-field-exit]")).toContainText("tu peux quitter");
+  await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","true");
+});
