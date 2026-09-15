@@ -86,3 +86,11 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Validation serveur réelle : session QA fermée `QAEND12` refuse un nouveau JOIN ; la synchronisation d'un élève déjà relié reste indépendante de `is_active`.
 - Quality Gate final : 48 tests Playwright réussis, dont FIELD safe-exit et les deux contrats END-OF-VISIT.
 - Validation terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
+
+
+## PGW REHEARSAL GATE — V8.13 — À EXÉCUTER
+- Runbook opérationnel : `PGW_REHEARSAL_V8.md`.
+- Répétition : 1 cockpit enseignant + 6 identités/appareils isolés.
+- Incidents imposés : reload, offline/reconnexion, fermeture/réouverture navigateur, tentative de contournement du verrouillage, fermeture des inscriptions et dernier sync.
+- Verdict GO seulement après cohérence appareil local + cockpit + Supabase + export CSV + CI.
+- Les six masters mission et leur direction artistique restent gelés.
