@@ -15,11 +15,10 @@ async function anonymousAuth(){
 }
 export function getJoinContext(){try{return JSON.parse(localStorage.getItem(CTX)||"null")}catch{return null}}
 export async function joinStudent({code,pseudo,classe}){
- const prepared=await rpc("prepare_student_join",{p_code:code,p_pseudo:pseudo,p_classe:classe});
  const auth=await anonymousAuth();
  try{
-   const claimed=await rpc("claim_student_join",{p_ticket:prepared.ticket},auth.access_token);
-   const ctx={userId:claimed.user_id,visitSessionId:claimed.visit_session_id,pseudo:claimed.pseudo,classe:claimed.classe,title:prepared.title,joinedAt:new Date().toISOString()};
+   const joined=await rpc("join_visit_session",{p_code:code,p_pseudo:pseudo,p_classe:classe},auth.access_token);
+   const ctx={userId:joined.user_id,visitSessionId:joined.visit_session_id,pseudo:joined.pseudo,classe:joined.classe,title:joined.title,joinedAt:new Date().toISOString()};
    localStorage.setItem(CTX,JSON.stringify(ctx)); return ctx;
  }catch(e){sessionStorage.removeItem(AUTH);sessionStorage.removeItem(REFRESH);throw e}
 }
