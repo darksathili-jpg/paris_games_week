@@ -400,17 +400,19 @@ test("PGW REHEARSAL V8.13 — six élèves isolés et incidents terrain",async({
       await page.reload({waitUntil:"networkidle"});
       await expect(page.locator('[data-open-mission="2"]')).toBeEnabled();
     }
+    let activePage=page;
     if(mode==="reopen"){
+      await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
       await page.close();
-      const p2=await context.newPage();await p2.goto("/preview-v8.html",{waitUntil:"networkidle"});
-      await expect(p2.locator('[data-open-mission="2"]')).toBeEnabled();
+      activePage=await context.newPage();await activePage.goto("/preview-v8.html",{waitUntil:"networkidle"});
+      await expect(activePage.locator('[data-open-mission="2"]')).toBeEnabled();
     } else if(mode==="offline"){
       await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","false");
       await context.setOffline(false);await page.evaluate(()=>window.dispatchEvent(new Event("online")));
       await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
       await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","true");
-    } else {
-      await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
+    } else if(mode!=="reopen") {
+      await expect.poll(async()=>activePage.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
     }
     results.push({id,mode,pseudo});
     await context.close();
