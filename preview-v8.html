@@ -60,6 +60,22 @@
   </section>
 </div>
 <div class="v8-toast" data-v8-toast role="status" aria-live="polite"></div>
+<div class="join-dialog" data-join-dialog hidden>
+  <div class="join-dialog__backdrop" data-join-close></div>
+  <section class="join-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="join-title">
+    <button class="mission-drawer__close" type="button" data-join-close aria-label="Fermer">×</button>
+    <p class="drawer-kicker">PGW · SESSION ÉLÈVE</p>
+    <h2 id="join-title">Relier cette visite</h2>
+    <p class="join-help">Tes réponses restent enregistrées sur cet appareil même si le réseau disparaît.</p>
+    <form data-join-form>
+      <label>Code de sortie<input name="code" value="PGW26" required maxlength="20" autocomplete="off"></label>
+      <label>Classe<input name="classe" placeholder="Ex. TNSI" required maxlength="30" autocomplete="off"></label>
+      <label>Pseudo<input name="pseudo" placeholder="Ex. Ada42" required minlength="2" maxlength="40" autocomplete="off"></label>
+      <p class="join-error" data-join-error aria-live="polite"></p>
+      <button class="drawer-primary" type="submit">Relier ma visite</button>
+    </form>
+  </section>
+</div>
 <script src="js/content.js?v=84progress"></script>
 <script type="module" src="js/v8-app.js?v=84progress"></script>
 <script type="module" src="js/v8-quality.js?v=84progress"></script>
