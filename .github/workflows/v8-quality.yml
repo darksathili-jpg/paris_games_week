@@ -12,6 +12,8 @@ on:
       - 'assets/v8/**'
       - 'ART_DIRECTION_V8.md'
       - 'IMAGE_PIPELINE_V8.md'
+      - 'FIELD_READINESS_V8.md'
+      - 'RELEASE_GATE_V8.md'
       - 'package.json'
       - '.github/workflows/v8-quality.yml'
   pull_request:
@@ -27,10 +29,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: v8-quality-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   v8-quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,7 +46,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install image tooling
+      - name: Install dependencies
         run: npm install --no-package-lock --ignore-scripts=false
 
       - name: Check JavaScript syntax
@@ -54,8 +60,10 @@ jobs:
           node --check js/v8-session.js
           node --check js/v8-join.js
           node --check js/teacher.js
+          node --check tools/check-lighthouse.mjs
           test -s css/teacher-v8.css
           ! grep -Eq 'game-themes|cinematic|theme-system|visual-effects|skin-select|esport|arcade' teacher.html
+          ! grep -Eri 'service_role|sb_secret_' preview-v8.html js/v8-*.js
           node --check tools/validate-images.mjs
           node --check tools/build-images.mjs
           node --check tools/check-mission-state.mjs
@@ -92,3 +100,25 @@ jobs:
 
       - name: Six-device PGW rehearsal once
         run: npx playwright test --project=desktop-1440 --grep "PGW REHEARSAL V8.13"
+
+      - name: Reinforced release Playwright gate
+        run: npx playwright test tests/visual/v8-release.spec.js --project=desktop-1440
+
+      - name: Lighthouse mobile release budget
+        shell: bash
+        run: |
+          npm run serve:v8 >/tmp/pgw-v8-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/preview-v8.html >/dev/null; then break; fi
+            sleep 0.5
+          done
+          export CHROME_PATH="$(node -e "const {chromium}=require('playwright'); console.log(chromium.executablePath())")"
+          npx lighthouse http://127.0.0.1:4173/preview-v8.html \
+            --quiet \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+            --only-categories=performance,accessibility,best-practices \
+            --output=json \
+            --output-path=/tmp/lighthouse-v8.json
+          node tools/check-lighthouse.mjs /tmp/lighthouse-v8.json
