@@ -282,3 +282,14 @@ test("LIVE progression M01 puis M02 hors ligne et rattrapage automatique",async(
   await expect(page.locator("[data-sync-status]")).toContainText("Synchronisé");
   console.log("LIVE_PROGRESS_CONTEXT",JSON.stringify({pseudo,classe,...ctx,queuedBeforeReconnect:queued}));
 });
+
+
+test("teacher public shell V8.10 sans héritage visuel",async({page})=>{
+  await page.goto("/teacher.html",{waitUntil:"networkidle"});
+  await expect(page.locator(".teacher-brand")).toContainText("LYCÉE WATTEAU");
+  await expect(page.locator(".teacher-version")).toContainText("V8.10");
+  await expect(page.locator("#theme-toggle")).toBeVisible();
+  await expect(page.locator("body")).not.toContainText(/eSport|Arcade|Cyber/i);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+2);
+  expect(overflow).toBeFalsy();
+});
