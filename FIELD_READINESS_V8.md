@@ -12,6 +12,10 @@
 - Drawer : contenu dans le viewport et contrôles visibles.
 - Contenu : 6 missions, 61 questions, 6 badges, 1350 XP.
 
+## Retours terrain confirmés
+- Test PC réel : autosauvegarde et progression confirmées.
+- UX-P1 drawer desktop : corrigé en V8.5 (panneau mieux proportionné, flou réduit, XP non promis lors d'une simple modification).
+
 ## Risques terrain encore ouverts
 ### P0 — perte de données
 Le localStorage protège contre un rechargement sur le même appareil, mais ne constitue pas une sauvegarde distante. La synchronisation Supabase doit être conçue en mode local-first : écriture locale immédiate, file de synchronisation, accusé de réception serveur, retry sans perte.
