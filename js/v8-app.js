@@ -1,3 +1,4 @@
+import {joinStudent,getJoinContext} from "./v8-join.js";
 import {enqueue,flushQueue,setSyncAdapter,pendingCount} from "./v8-sync.js";
 import {supabaseAdapter} from "./v8-supabase.js";
 import {missions as cardData,totalXp} from "./v8-data.js";
@@ -10,7 +11,8 @@ const toast=document.querySelector("[data-v8-toast]");
 const STORAGE_KEY="pgw-v8-progress-v1";
 const BACKUP_KEY="pgw-v8-progress-v1-backup";
 const syncStatus=document.querySelector("[data-sync-status]");
-setSyncAdapter(supabaseAdapter());
+// Synchronisation distante activée seulement après liaison explicite de la visite.
+if(getJoinContext()) setSyncAdapter(supabaseAdapter());
 window.addEventListener("pgw:sync-status",e=>{
  if(!syncStatus)return; const {state,pending}=e.detail;
  const labels={local:"Enregistré sur cet appareil",pending:`Synchronisation en attente${pending?` · ${pending}`:""}`,syncing:"Synchronisation…",synced:"Synchronisé"};
@@ -143,6 +145,13 @@ function validateMission(id,form){
   if(!isValidated(id)) state.validated.push(id);
   enqueue("progress",{missionId:id,completed:true,xp:m.xp});
   saveState(); void flushQueue(); closeDrawer(); render();
+
+const joinDialog=document.querySelector("[data-join-dialog]"),joinForm=document.querySelector("[data-join-form]"),joinChip=document.querySelector("[data-join-open]"),joinError=document.querySelector("[data-join-error]");
+function paintJoin(){const c=getJoinContext();if(joinChip)joinChip.textContent=c?`${c.pseudo} · ${c.classe}`:"Relier cette visite";}
+joinChip?.addEventListener("click",()=>{if(!getJoinContext())joinDialog.hidden=false;});
+document.querySelectorAll("[data-join-close]").forEach(b=>b.addEventListener("click",()=>joinDialog.hidden=true));
+joinForm?.addEventListener("submit",async e=>{e.preventDefault();joinError.textContent="";const b=joinForm.querySelector('button[type="submit"]');b.disabled=true;b.textContent="Connexion…";try{const fd=new FormData(joinForm);await joinStudent({code:fd.get("code"),classe:fd.get("classe"),pseudo:fd.get("pseudo")});setSyncAdapter(supabaseAdapter());paintJoin();joinDialog.hidden=true;void flushQueue();showToast("✓ Visite reliée — synchronisation activée");}catch(err){joinError.textContent=err.message||"Connexion impossible";}finally{b.disabled=false;b.textContent="Relier ma visite";}});
+paintJoin();
   const next=id<6?cardData.find(m=>m.id===id+1):null;
   showToast(id===6?"★ Boss Final validé — NSI Quest terminée !":`Mission ${String(id).padStart(2,"0")} validée · +${m.xp} XP${next?" · Mission suivante débloquée":""}`);
 }
