@@ -6,6 +6,7 @@ const drawer=document.querySelector("[data-mission-drawer]");
 const drawerContent=document.querySelector("[data-drawer-content]");
 const toast=document.querySelector("[data-v8-toast]");
 const STORAGE_KEY="pgw-v8-progress-v1";
+const BACKUP_KEY="pgw-v8-progress-v1-backup";
 
 const escapeHtml=(value)=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
 
@@ -15,9 +16,25 @@ function loadState(){
     const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
     if(parsed&&typeof parsed==="object") return {answers:parsed.answers||{},validated:parsed.validated||[]};
   }catch{}
+  try{
+    const backup=JSON.parse(localStorage.getItem(BACKUP_KEY)||"null");
+    if(backup&&typeof backup==="object") return {answers:backup.answers||{},validated:backup.validated||[]};
+  }catch{}
   return {answers:{},validated:[]};
 }
-function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function saveState(){
+  const payload=JSON.stringify(state);
+  try{
+    const current=localStorage.getItem(STORAGE_KEY);
+    if(current) localStorage.setItem(BACKUP_KEY,current);
+    localStorage.setItem(STORAGE_KEY,payload);
+    window.dispatchEvent(new CustomEvent("pgw:local-saved",{detail:{at:Date.now()}}));
+    return true;
+  }catch(error){
+    console.error("PGW local save failed",error);
+    return false;
+  }
+}
 function missionContent(id){return content?.missions?.find(m=>m.order===id);}
 function isValidated(id){return state.validated.includes(id);}
 function isUnlocked(id){return id===1||isValidated(id-1);}
@@ -97,7 +114,10 @@ function collectForm(id,form){
     else if(q.type==="radio") answers[q.key]=nodes.find(n=>n.checked)?.value||"";
     else answers[q.key]=nodes[0]?.value??"";
   }
-  state.answers[id]=answers; saveState(); return answers;
+  state.answers[id]=answers;
+  const saved=saveState();
+  if(!saved) showToast("⚠ Impossible d’enregistrer localement. Ne ferme pas cette page.");
+  return answers;
 }
 function showToast(message){toast.textContent=message;toast.classList.add("is-visible");clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove("is-visible"),3200);}
 function validateMission(id,form){
