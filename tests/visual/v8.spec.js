@@ -134,7 +134,7 @@ test("drawer lisible et contenu dans le viewport",async({page})=>{
   expect(box.x).toBeGreaterThanOrEqual(0); expect(box.y).toBeGreaterThanOrEqual(0);
   expect(box.x+box.width).toBeLessThanOrEqual(vp.width+1);
   expect(box.height).toBeLessThanOrEqual(vp.height+1);
-  await expect(page.locator(".mission-drawer__close")).toBeVisible();
+  await expect(page.locator("[data-mission-drawer] .mission-drawer__close")).toBeVisible();
   await expect(page.locator('[data-mission-form="1"] button[type="submit"]')).toBeVisible();
 });
 
