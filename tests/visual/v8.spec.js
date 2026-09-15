@@ -344,3 +344,18 @@ test("END-OF-VISIT contrat: session fermée bloque nouveau JOIN sans bloquer syn
   await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
   await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","true");
 });
+
+
+test("END-OF-VISIT serveur: nouveau JOIN refusé sur session QA fermée",async({page})=>{
+  test.setTimeout(30000);
+  await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+  await page.evaluate(()=>{for(const k of Object.keys(localStorage))if(k.startsWith("pgw-v8"))localStorage.removeItem(k);sessionStorage.clear();});
+  await page.reload({waitUntil:"networkidle"});
+  await page.locator("[data-join-open]").click();
+  await page.locator('[data-join-form] input[name="code"]').fill("QAEND12");
+  await page.locator('[data-join-form] input[name="classe"]').fill("QA-END-CLOSED");
+  await page.locator('[data-join-form] input[name="pseudo"]').fill("QA-REFUSED-"+Date.now());
+  await page.locator('[data-join-form] button[type="submit"]').click();
+  await expect(page.locator("[data-join-error]")).toContainText(/fermée|invalide/i,{timeout:15000});
+  expect(await page.evaluate(()=>localStorage.getItem("pgw-v8-sync-context-v1"))).toBeNull();
+});
