@@ -83,5 +83,8 @@ jobs:
             echo "Mission 01 master not present yet: image build deferred."
           fi
 
-      - name: Visual smoke tests
-        run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible|autosauvegarde|backup local|mission deja validee|queue idempotente|coupure réseau|LIVE join anonyme|LIVE progression M01|FIELD safe-exit|END-OF-VISIT contrat|END-OF-VISIT serveur|PGW REHEARSAL V8.13"
+      - name: Responsive field tests
+        run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible|autosauvegarde|backup local|mission deja validee|queue idempotente|coupure réseau|LIVE join anonyme|LIVE progression M01|FIELD safe-exit|END-OF-VISIT contrat|END-OF-VISIT serveur"
+
+      - name: Six-device PGW rehearsal once
+        run: npx playwright test --project=desktop-1440 --grep "PGW REHEARSAL V8.13"
