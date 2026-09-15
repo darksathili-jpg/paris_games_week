@@ -205,3 +205,32 @@ test("coupure réseau conserve la queue puis reprise tente la synchronisation",a
  expect(after).toBe(before);
  await expect(page.locator("[data-sync-status]")).toContainText("Synchronisation en attente");
 });
+
+
+test("LIVE join anonyme puis synchronisation Supabase idempotente",async({page})=>{
+  test.setTimeout(45000);
+  const pseudo="QA-"+Date.now(), classe="QA-V8";
+  await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+  await page.evaluate(()=>{for(const k of Object.keys(localStorage))if(k.startsWith("pgw-v8"))localStorage.removeItem(k);sessionStorage.clear();});
+  await page.reload({waitUntil:"networkidle"});
+  await page.locator("[data-join-open]").click();
+  await page.locator('[data-join-form] input[name="code"]').fill("PGW26");
+  await page.locator('[data-join-form] input[name="classe"]').fill(classe);
+  await page.locator('[data-join-form] input[name="pseudo"]').fill(pseudo);
+  await page.locator('[data-join-form] button[type="submit"]').click();
+  await expect(page.locator("[data-join-open]")).toContainText(pseudo,{timeout:15000});
+  const ctx=await page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-context-v1")));
+  expect(ctx.userId).toBeTruthy(); expect(ctx.visitSessionId).toBeTruthy();
+
+  await page.locator('[data-open-mission="1"]').click();
+  const f=page.locator('[data-answer="objectives"]');
+  await f.fill("QA SYNC VERSION A — réponse suffisamment longue pour validation.");
+  await page.locator('[data-drawer-close]').last().click();
+  await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:15000}).toBe(0);
+
+  await page.locator('[data-open-mission="1"]').click();
+  await f.fill("QA SYNC VERSION B — dernière version idempotente attendue.");
+  await page.locator('[data-drawer-close]').last().click();
+  await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:15000}).toBe(0);
+  console.log("LIVE_QA_CONTEXT",JSON.stringify({pseudo,classe,...ctx}));
+});
