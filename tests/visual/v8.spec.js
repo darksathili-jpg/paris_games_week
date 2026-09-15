@@ -172,3 +172,35 @@ test("mission deja validee ne promet pas de nouveaux XP",async({page})=>{
  await expect(submit).toHaveText("Enregistrer les modifications");
  await expect(submit).not.toContainText("+100 XP");
 });
+
+
+test("queue idempotente remplace une réponse sans duplication",async({page})=>{
+ await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+ await page.evaluate(()=>localStorage.removeItem("pgw-v8-sync-queue-v1"));
+ await page.reload({waitUntil:"networkidle"});
+ await page.locator('[data-open-mission="1"]').click();
+ const field=page.locator('[data-answer="objectives"]');
+ await field.fill("Première version assez longue pour être enregistrée localement.");
+ await field.fill("Deuxième version assez longue qui doit remplacer la précédente.");
+ const q=await page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]"));
+ const hits=q.filter(x=>x.id==="answer:1:objectives");
+ expect(hits).toHaveLength(1);
+ expect(hits[0].payload.value).toContain("Deuxième version");
+});
+
+test("coupure réseau conserve la queue puis reprise tente la synchronisation",async({page,context})=>{
+ await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+ await page.evaluate(()=>{localStorage.removeItem("pgw-v8-sync-queue-v1");localStorage.removeItem("pgw-v8-sync-context-v1");});
+ await context.setOffline(true);
+ await page.reload({waitUntil:"domcontentloaded"});
+ await page.locator('[data-open-mission="1"]').click();
+ await page.locator('[data-answer="objectives"]').fill("Réponse créée hors ligne et conservée dans la file locale.");
+ await expect(page.locator("[data-sync-status]")).toContainText("Synchronisation en attente");
+ const before=await page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length);
+ expect(before).toBeGreaterThan(0);
+ await context.setOffline(false);
+ await page.waitForTimeout(500);
+ const after=await page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length);
+ expect(after).toBe(before);
+ await expect(page.locator("[data-sync-status]")).toContainText("Synchronisation en attente");
+});
