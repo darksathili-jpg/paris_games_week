@@ -12,6 +12,7 @@
 - Drawer : contenu dans le viewport et contrôles visibles.
 - Contenu : 6 missions, 61 questions, 6 badges, 1350 XP.
 - Répétition PGW six appareils : validée en V8.15.
+- SESSION DURABILITY GATE : validé en V8.16.
 
 ## Retours terrain confirmés
 - Test PC réel : autosauvegarde et progression confirmées.
@@ -24,9 +25,6 @@ Le localStorage protège contre un rechargement sur le même appareil, et la syn
 ### P0 — reprise après réseau dégradé
 La validation d'une mission ne dépend jamais du réseau. Le réseau ne sert qu'à synchroniser une copie des réponses ; la queue locale doit survivre à une panne de refresh Auth et repartir avec la même identité.
 
-### P0 — durabilité de session Auth
-V8.15 stockait encore les tokens élève en sessionStorage. V8.16 doit garantir qu'une fermeture complète du navigateur conserve l'identité anonyme Supabase, renouvelle le token expirant et ne crée pas un nouvel utilisateur anonyme inutilement.
-
 ### P1 — charge de saisie mobile
 61 questions au total. M03 (16 questions), M02 (13), M04 (12) et M06 (12) concentrent l'effort. Ne pas supprimer pédagogiquement des questions sans test élève ; mesurer d'abord temps, abandons et friction.
 
@@ -34,9 +32,8 @@ V8.15 stockait encore les tokens élève en sessionStorage. V8.16 doit garantir 
 Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigateur. Les droits d'accès sont imposés côté Supabase/RLS.
 
 ## Ordre strict restant
-1. SESSION DURABILITY GATE — fermeture/réouverture + refresh + même identité + queue préservée.
-2. STUDENT PILOT — test réel sur quelques élèves ; mesurer temps/frictions avant d'alléger les 61 questions.
-3. RELEASE GATE — Lighthouse, accessibilité, offline/réseau lent, erreurs JS/404, version gelée.
+1. STUDENT PILOT — test réel sur quelques élèves ; mesurer temps/frictions avant d'alléger les 61 questions.
+2. RELEASE GATE — Lighthouse, accessibilité, offline/réseau lent, erreurs JS/404, version gelée.
 
 ## Règles de non-régression
 - Ne pas retoucher les six masters sans défaut bloquant constaté.
@@ -108,7 +105,7 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Quality Gate V8.15 : 48/48 tests responsive PASS + répétition six appareils 1/1 PASS + déploiement Pages SUCCESS.
 - Ne pas augmenter arbitrairement un timeout pour masquer un 429 ou un défaut d'Auth.
 
-## SESSION DURABILITY — V8.16 — EN VALIDATION
+## SESSION DURABILITY — V8.16 — VALIDÉ
 - Référence Supabase : une session navigateur repose sur un access token court + un refresh token durable ; les refresh tokens peuvent être rotatifs et la nouvelle valeur doit être persistée immédiatement.
 - Session Auth élève déplacée vers `localStorage` sous une structure versionnée `pgw-v8-auth-session-v1` ; migration automatique des anciens tokens V8.15 présents en sessionStorage.
 - Refresh proactif 5 minutes avant expiration, refresh au retour au premier plan/réseau et refresh forcé après un 401 Data API ou JOIN.
@@ -116,5 +113,7 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Web Locks utilisé quand disponible afin d'éviter deux rotations concurrentes du même refresh token dans plusieurs onglets.
 - Un échec transitoire de refresh ne supprime ni la session locale, ni le contexte de visite, ni la queue. Si l'access token est encore utilisable, il reste utilisable ; sinon la queue attend.
 - Un JOIN réutilise une session anonyme existante au lieu de créer un nouveau compte ; un échec RPC ne détruit plus l'identité Auth.
-- Test dédié prévu avec une seule identité afin d'économiser le quota : fermeture/réouverture simulée, refresh réel, compteur signup inchangé, panne 503 de refresh simulée, queue conservée puis vidée après retour du service.
-- Verdict : ne passer à VALIDÉ qu'après Quality Gate V8.16 vert sans relâcher les assertions existantes.
+- Test dédié : fermeture/réouverture simulée, refresh réel, compteur signup inchangé, panne 503 de refresh simulée, queue conservée puis vidée après retour du service.
+- Quality Gate V8.16 : SUCCESS sans relâcher les assertions existantes.
+- Déploiement GitHub Pages V8.16 : SUCCESS.
+- Verdict : gate gelé ; toute régression de persistance/refresh doit faire échouer la CI.
