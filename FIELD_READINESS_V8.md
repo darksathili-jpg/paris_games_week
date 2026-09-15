@@ -75,11 +75,14 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Validation humaine terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
 
 
-## END-OF-VISIT GATE — V8.12 — EN VALIDATION
+## END-OF-VISIT GATE — V8.12 — VALIDÉ
 - Fermeture de session = fermeture des nouveaux JOIN uniquement.
 - Un profil student déjà relié reste associé à sa visit_session même lorsque is_active=false.
 - Les RLS de responses/progress restent basées sur auth.uid() + visit_session_id du profil : une fermeture ne coupe donc pas le vidage d'une queue existante.
 - Cockpit enseignant : confirmation explicite avant fermeture, libellé « Inscriptions fermées · synchronisation maintenue », panneau « Contrôle de fin de visite ».
 - Procédure : fermer inscriptions → actualiser → traiter « À vérifier » → exiger le message vert sur les appareils concernés → actualiser → exporter CSV final.
 - Export final : pseudo, classe, missions terminées, progression, XP, dernière remontée et réponses.
-- Test CI V8.12 ajouté et obligatoire. Le test de sécurité serveur complémentaire doit confirmer qu'un nouveau JOIN est refusé sur session fermée tandis qu'un élève déjà relié peut toujours écrire/synchroniser.
+- Test CI V8.12 ajouté et obligatoire.
+- Validation serveur réelle : session QA fermée `QAEND12` refuse un nouveau JOIN ; la synchronisation d'un élève déjà relié reste indépendante de `is_active`.
+- Quality Gate final : 48 tests Playwright réussis, dont FIELD safe-exit et les deux contrats END-OF-VISIT.
+- Validation terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
