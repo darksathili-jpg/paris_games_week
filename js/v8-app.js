@@ -1,5 +1,5 @@
 import {joinStudent,getJoinContext} from "./v8-join.js";
-import {enqueue,flushQueue,setSyncAdapter,pendingCount} from "./v8-sync.js";
+import {enqueue,flushQueue,setSyncAdapter,pendingCount,syncSnapshot} from "./v8-sync.js";
 import {supabaseAdapter} from "./v8-supabase.js";
 import {missions as cardData,totalXp} from "./v8-data.js";
 
@@ -17,6 +17,8 @@ window.addEventListener("pgw:sync-status",e=>{
  if(!syncStatus)return; const {state,pending}=e.detail;
  const labels={local:"Enregistré sur cet appareil",pending:`Synchronisation en attente${pending?` · ${pending}`:""}`,syncing:"Synchronisation…",synced:"Synchronisé"};
  syncStatus.textContent=labels[state]||labels.local; syncStatus.dataset.state=state;
+ const exit=document.querySelector("[data-field-exit]");
+ if(exit){exit.dataset.ready=state==="synced"&&pending===0?"true":"false";exit.textContent=state==="synced"&&pending===0?"✓ Données envoyées · tu peux quitter":"⚠ Ne ferme pas · envoi en cours";}
 });
 
 
@@ -153,7 +155,10 @@ const joinDialog=document.querySelector("[data-join-dialog]"),joinForm=document.
 function paintJoin(){const c=getJoinContext();if(joinChip)joinChip.textContent=c?`${c.pseudo} · ${c.classe}`:"Relier cette visite";}
 joinChip?.addEventListener("click",()=>{if(!getJoinContext())joinDialog.hidden=false;});
 document.querySelectorAll("[data-join-close]").forEach(b=>b.addEventListener("click",()=>joinDialog.hidden=true));
-joinForm?.addEventListener("submit",async e=>{e.preventDefault();joinError.textContent="";const b=joinForm.querySelector('button[type="submit"]');b.disabled=true;b.textContent="Connexion…";try{const fd=new FormData(joinForm);await joinStudent({code:fd.get("code"),classe:fd.get("classe"),pseudo:fd.get("pseudo")});setSyncAdapter(supabaseAdapter());paintJoin();joinDialog.hidden=true;void flushQueue();showToast("✓ Visite reliée — synchronisation activée");}catch(err){joinError.textContent=err.message||"Connexion impossible";}finally{b.disabled=false;b.textContent="Relier ma visite";}});
+joinForm?.addEventListener("submit",async e=>{e.preventDefault();joinError.textContent="";const b=joinForm.querySelector('button[type="submit"]');b.disabled=true;b.textContent="Connexion…";try{const fd=new FormData(joinForm);await joinStudent({code:fd.get("code"),classe:fd.get("classe"),pseudo:fd.get("pseudo")});setSyncAdapter(supabaseAdapter());paintJoin();
+const fieldExit=document.querySelector("[data-field-exit]");
+function paintFieldExit(){if(!fieldExit)return;const snap=syncSnapshot(),linked=Boolean(getJoinContext());const ready=linked&&snap.pending===0&&Boolean(snap.lastSync);fieldExit.dataset.ready=ready?"true":"false";fieldExit.textContent=ready?"✓ Données envoyées · tu peux quitter":linked?(snap.pending?"⚠ Ne ferme pas · envoi en attente":"Enregistré ici · synchronisation à confirmer"):"Relie ta visite pour sécuriser l’envoi";}
+paintFieldExit();joinDialog.hidden=true;void flushQueue();showToast("✓ Visite reliée — synchronisation activée");}catch(err){joinError.textContent=err.message||"Connexion impossible";}finally{b.disabled=false;b.textContent="Relier ma visite";}});
 paintJoin();
 document.addEventListener("click",e=>{
   const open=e.target.closest("[data-open-mission]"); if(open){openMission(Number(open.dataset.openMission));return;}
