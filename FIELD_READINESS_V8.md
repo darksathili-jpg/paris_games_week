@@ -45,3 +45,12 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Une correction doit répondre à un défaut mesuré.
 - Toute évolution fonctionnelle doit conserver le parcours M01→M06, la persistance et le verrouillage.
 - Aucun échec réseau ne doit effacer une réponse élève.
+
+
+## TEACHER GATE — V8.9
+- Accès enseignant : Supabase Auth + profil role=teacher ; aucune service_role dans le navigateur.
+- RLS : lecture des profiles/responses/progress réservée à soi-même ou is_teacher(); gestion des sessions réservée à is_teacher().
+- Progression cockpit : source de vérité = table progress (completed/xp), et non inférence depuis les champs de réponse.
+- Synchronisation cockpit : affiche la dernière remontée connue côté serveur. Ne prétend jamais connaître une queue hors ligne non encore remontée.
+- Export CSV : pseudo, classe, missions terminées, progression, XP, dernière remontée et réponses pédagogiques.
+- Limite assumée : un élève hors ligne peut avoir une queue locale invisible au serveur ; le cockpit signale donc la fraîcheur de la dernière remontée, pas un faux état « pending » distant.
