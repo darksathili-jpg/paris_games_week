@@ -11,3 +11,7 @@ html[data-theme="light"]{color-scheme:light;--bg-0:#edf4fb;--bg-1:#f7fbff;--bg-2
 @media(max-width:900px){.dashboard-head{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}.teacher-grid{grid-template-columns:1fr}.teacher-toolbar{align-items:stretch;flex-direction:column}.toolbar-group{align-items:stretch}.field{flex:1}.teacher-version{display:none}}
 @media(max-width:600px){.shell,.teacher-shell{width:min(100% - 20px,620px)}.teacher-topbar{min-height:64px}.teacher-brand img{width:42px;height:42px}.teacher-brand strong{font-size:.7rem}.teacher-brand small{font-size:.55rem}.teacher-link{font-size:.6rem;padding:.35rem}.dashboard-head{padding:1rem}.page-title{font-size:2.5rem}.summary-grid{grid-template-columns:1fr 1fr}.teacher-toolbar{padding:.75rem}.toolbar-group{display:grid;grid-template-columns:1fr}.btn{width:100%}.teacher-icon{width:40px}.bar-item{grid-template-columns:1fr 44px}.bar-track{grid-column:1/-1;grid-row:2}.data-table{min-width:760px}.drawer{padding:1rem}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.summary-grid-field{grid-template-columns:repeat(5,1fr)}
+@media(max-width:1100px){.summary-grid-field{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.summary-grid-field{grid-template-columns:1fr 1fr}}
