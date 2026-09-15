@@ -78,15 +78,23 @@
   }
 
   function statsForUser(userId){
-    const rows=responses.filter(r=>r.user_id===userId); const map=Object.fromEntries(rows.map(r=>[r.question_key,r.answer?.value??r.answer]));
-    let complete=0,xp=0;
-    for(const m of content.missions){const req=m.questions.filter(q=>q.required);const ok=req.length&&req.every(q=>{const v=map[q.key];if(q.type==="checkboxes")return Array.isArray(v)&&v.length>0;const s=String(v??"").trim();return s&&(!q.minLength||s.length>=q.minLength);});if(ok){complete++;xp+=m.xp;}}
-    return {complete,xp,percent:Math.round(xp/content.totalXp*100),answerCount:rows.length};
+    const rows=responses.filter(r=>r.user_id===userId);
+    const done=progress.filter(r=>r.user_id===userId&&r.completed);
+    const xp=done.reduce((sum,r)=>sum+Number(r.xp||0),0);
+    const timestamps=[...rows.map(r=>r.updated_at),...progress.filter(r=>r.user_id===userId).map(r=>r.updated_at)].filter(Boolean).map(Date.parse).filter(Number.isFinite);
+    const lastSync=timestamps.length?new Date(Math.max(...timestamps)):null;
+    return {complete:done.length,xp,percent:Math.min(100,Math.round(xp/content.totalXp*100)),answerCount:rows.length,lastSync};
+  }
+  function syncLabel(st){
+    if(!st.lastSync)return {text:"Aucune remontée",kind:"warn"};
+    const age=Date.now()-st.lastSync.getTime();
+    if(age<2*60*1000)return {text:"Synchronisé récemment",kind:"good"};
+    return {text:"Dernière remontée "+st.lastSync.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}),kind:""};
   }
 
   function sessionProgress(){
     return content.missions.map(m=>{
-      let count=0; for(const p of participants){const s=statsForUser(p.id); const userRows=responses.filter(r=>r.user_id===p.id); const map=Object.fromEntries(userRows.map(r=>[r.question_key,r.answer?.value??r.answer])); const req=m.questions.filter(q=>q.required); if(req.length&&req.every(q=>{const v=map[q.key];if(q.type==="checkboxes")return Array.isArray(v)&&v.length>0;const txt=String(v??"").trim();return txt&&(!q.minLength||txt.length>=q.minLength);})){count++;}}
+      const count=participants.filter(p=>progress.some(r=>r.user_id===p.id&&r.mission_key===`mission-${String(m.order).padStart(2,"0")}`&&r.completed)).length;
       return {mission:m,count,percent:participants.length?Math.round(count/participants.length*100):0};
     });
   }
@@ -94,7 +102,7 @@
   function renderDashboard(){
     const total=participants.length; const completed=participants.filter(p=>statsForUser(p.id).percent===100).length; const avg=total?Math.round(participants.reduce((a,p)=>a+statsForUser(p.id).percent,0)/total):0;
     const sessionOptions=sessions.map(s=>`<option value="${attr(s.id)}" ${s.id===selectedSession?.id?"selected":""}>${esc(s.title)} · ${esc(s.event_date)}${s.is_active?" · active":""}</option>`).join("");
-    const rows=participants.map(p=>{const st=statsForUser(p.id);return `<tr><td><b>${esc(p.pseudo||"Sans pseudo")}</b><br><small style="color:var(--muted)">${esc(p.classe||"")}</small></td><td>${st.answerCount}</td><td><div class="progress-inline"><div class="bar"><span style="width:${st.percent}%"></span></div><b>${st.percent}%</b></div></td><td>${st.xp} XP</td><td><button class="btn btn-ghost btn-small view-student" data-user="${attr(p.id)}">Voir</button></td></tr>`;}).join("");
+    const rows=participants.map(p=>{const st=statsForUser(p.id),sy=syncLabel(st);return `<tr><td><b>${esc(p.pseudo||"Sans pseudo")}</b><br><small style="color:var(--muted)">${esc(p.classe||"")}</small></td><td>${st.answerCount}</td><td><div class="progress-inline"><div class="bar"><span style="width:${st.percent}%"></span></div><b>${st.percent}%</b></div></td><td>${st.xp} XP</td><td><span class="chip ${sy.kind==="good"?"chip-good":sy.kind==="warn"?"chip-warn":""}">${esc(sy.text)}</span></td><td><button class="btn btn-ghost btn-small view-student" data-user="${attr(p.id)}">Voir</button></td></tr>`;}).join("");
     const bars=sessionProgress().map(x=>`<div class="bar-item"><label>${esc(x.mission.title)}</label><div class="bar-track"><span style="width:${x.percent}%"></span></div><b>${x.count}/${total}</b></div>`).join("");
     app.innerHTML=`<div class="teacher-wrap">
       <section class="dashboard-head"><div><div class="page-kicker">COCKPIT · ${esc(teacher?.email||"")}</div><h1 class="page-title">Vue classe.</h1><p class="page-subtitle">Suivi pédagogique sans classement public : progression, réponses, missions et export des données.</p></div><div class="progress-card"><div class="progress-row"><span>Progression moyenne</span><b>${avg}%</b></div><div class="progress-track"><div class="progress-fill" style="width:${avg}%"></div></div><div class="progress-row" style="margin-top:10px"><small>${total} participants</small><small>${completed} terminés</small></div></div></section>
@@ -106,7 +114,7 @@
 
       ${selectedSession?`<section class="summary-grid"><div class="stat"><small>Participants</small><b>${total}</b></div><div class="stat"><small>Terminés</small><b>${completed}</b></div><div class="stat"><small>Progression</small><b>${avg}%</b></div><div class="stat"><small>Code mission</small><b style="font-size:22px">${esc(selectedSession.access_code)}</b></div></section>
       <section class="teacher-grid"><div class="panel"><h2>Progression par mission</h2><div class="bar-list">${bars||'<div class="empty"><b>Aucune donnée</b>Les barres apparaîtront dès que les élèves commenceront.</div>'}</div></div><div class="panel"><h2>Session</h2><p><b>${esc(selectedSession.title)}</b></p><p style="color:var(--muted)">${esc(selectedSession.event_date)} · ${selectedSession.year}</p><span class="chip ${selectedSession.is_active?"chip-good":"chip-warn"}">${selectedSession.is_active?"Active":"Fermée"}</span><div style="margin-top:16px"><button id="toggle-session" class="btn btn-ghost btn-small">${selectedSession.is_active?"Fermer les inscriptions":"Réouvrir la session"}</button></div></div></section>
-      <section><div class="section-head"><div><h2>Participants</h2><p>Cliquez sur un élève pour consulter son questionnaire.</p></div></div><div class="table-wrap">${rows?`<table class="data-table"><thead><tr><th>Élève</th><th>Réponses</th><th>Progression</th><th>XP</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty"><b>Aucun participant</b>Partagez le code de mission aux élèves pour démarrer.</div>'}</div></section>`:`<section class="panel empty"><b>Aucune session.</b>Créez une session pour obtenir un code à partager aux élèves.</section>`}
+      <section><div class="section-head"><div><h2>Participants</h2><p>Cliquez sur un élève pour consulter son questionnaire.</p></div></div><div class="table-wrap">${rows?`<table class="data-table"><thead><tr><th>Élève</th><th>Réponses</th><th>Progression</th><th>XP</th><th>Dernière remontée</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty"><b>Aucun participant</b>Partagez le code de mission aux élèves pour démarrer.</div>'}</div></section>`:`<section class="panel empty"><b>Aucune session.</b>Créez une session pour obtenir un code à partager aux élèves.</section>`}
     </div>
     <dialog id="session-dialog" class="dialog"><div class="dialog-inner"><div class="dialog-head"><h2>Nouvelle session</h2><button class="icon-btn" id="close-dialog" type="button">×</button></div><form id="session-form" class="form-stack"><div class="field"><label>Titre</label><input class="input" name="title" required value="PGW NSI ${new Date().getFullYear()}"></div><div class="field"><label>Année</label><input class="input" type="number" name="year" required min="2026" max="2100" value="${new Date().getFullYear()}"></div><div class="field"><label>Date</label><input class="input" type="date" name="event_date" required value="${config.visitDate||""}"></div><div class="field"><label>Code de mission</label><input class="input" name="access_code" required maxlength="20" value="PGW${String(new Date().getFullYear()).slice(-2)}"></div><button class="btn btn-primary" type="submit">Créer la session</button></form></div></dialog>`;
     bindDashboard();
@@ -143,8 +151,8 @@
 
   function csvEscape(v){const s=String(v??"").replace(/\r?\n/g," ");return /[;"\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
   function exportCsv(){
-    if(!selectedSession)return;const questionKeys=allQuestions.map(q=>q.key);const headers=["pseudo","classe","progression_pct","xp",...allQuestions.map(q=>`${q.missionTitle} — ${q.label}`)];const lines=[headers.map(csvEscape).join(";")];
-    for(const p of participants){const st=statsForUser(p.id);const map=Object.fromEntries(responses.filter(r=>r.user_id===p.id).map(r=>[r.question_key,r.answer?.value??r.answer]));const row=[p.pseudo,p.classe,st.percent,st.xp,...questionKeys.map(k=>formatAnswer(map[k]))];lines.push(row.map(csvEscape).join(";"));}
+    if(!selectedSession)return;const questionKeys=allQuestions.map(q=>q.key);const headers=["pseudo","classe","missions_terminees","progression_pct","xp","derniere_remontee",...allQuestions.map(q=>`${q.missionTitle} — ${q.label}`)];const lines=[headers.map(csvEscape).join(";")];
+    for(const p of participants){const st=statsForUser(p.id);const map=Object.fromEntries(responses.filter(r=>r.user_id===p.id).map(r=>[r.question_key,r.answer?.value??r.answer]));const row=[p.pseudo,p.classe,st.complete,st.percent,st.xp,st.lastSync?st.lastSync.toISOString():"",...questionKeys.map(k=>formatAnswer(map[k]))];lines.push(row.map(csvEscape).join(";"));}
     const blob=new Blob(["\uFEFF"+lines.join("\n")],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`pgw-nsi-${selectedSession.year}-${selectedSession.event_date}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast("Export CSV généré.","good");
   }
 
