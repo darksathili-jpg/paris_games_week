@@ -8,6 +8,7 @@ on:
       - 'css/v8-*.css'
       - 'js/v8-*.js'
       - 'tools/**'
+      - 'tests/**'
       - 'assets/v8/**'
       - 'ART_DIRECTION_V8.md'
       - 'IMAGE_PIPELINE_V8.md'
@@ -19,6 +20,7 @@ on:
       - 'css/v8-*.css'
       - 'js/v8-*.js'
       - 'tools/**'
+      - 'tests/**'
       - 'assets/v8/**'
       - 'package.json'
 
