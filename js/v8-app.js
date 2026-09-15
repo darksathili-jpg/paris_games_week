@@ -1,3 +1,5 @@
+import {enqueue,flushQueue,setSyncAdapter,pendingCount} from "./v8-sync.js";
+import {supabaseAdapter} from "./v8-supabase.js";
 import {missions as cardData,totalXp} from "./v8-data.js";
 
 const content=window.PGW_CONTENT;
@@ -7,6 +9,14 @@ const drawerContent=document.querySelector("[data-drawer-content]");
 const toast=document.querySelector("[data-v8-toast]");
 const STORAGE_KEY="pgw-v8-progress-v1";
 const BACKUP_KEY="pgw-v8-progress-v1-backup";
+const syncStatus=document.querySelector("[data-sync-status]");
+setSyncAdapter(supabaseAdapter());
+window.addEventListener("pgw:sync-status",e=>{
+ if(!syncStatus)return; const {state,pending}=e.detail;
+ const labels={local:"Enregistré sur cet appareil",pending:`Synchronisation en attente${pending?` · ${pending}`:""}`,syncing:"Synchronisation…",synced:"Synchronisé"};
+ syncStatus.textContent=labels[state]||labels.local; syncStatus.dataset.state=state;
+});
+
 
 const escapeHtml=(value)=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
 
@@ -115,6 +125,7 @@ function collectForm(id,form){
     else answers[q.key]=nodes[0]?.value??"";
   }
   state.answers[id]=answers;
+  for(const q of m.questions) enqueue("answer",{missionId:id,questionKey:q.key,value:answers[q.key]??(q.type==="checkboxes"?[]:"")});
   const saved=saveState();
   if(!saved) showToast("⚠ Impossible d’enregistrer localement. Ne ferme pas cette page.");
   return answers;
@@ -130,7 +141,8 @@ function validateMission(id,form){
     showToast(`${invalid.length} réponse${invalid.length>1?"s":""} requise${invalid.length>1?"s":""} à compléter.`);return;
   }
   if(!isValidated(id)) state.validated.push(id);
-  saveState(); closeDrawer(); render();
+  enqueue("progress",{missionId:id,completed:true,xp:m.xp});
+  saveState(); void flushQueue(); closeDrawer(); render();
   const next=id<6?cardData.find(m=>m.id===id+1):null;
   showToast(id===6?"★ Boss Final validé — NSI Quest terminée !":`Mission ${String(id).padStart(2,"0")} validée · +${m.xp} XP${next?" · Mission suivante débloquée":""}`);
 }
