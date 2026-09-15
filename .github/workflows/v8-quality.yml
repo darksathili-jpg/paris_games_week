@@ -48,6 +48,7 @@ jobs:
           node --check js/v8-sync.js
           node --check js/v8-supabase.js
           node --check js/v8-supabase-config.js
+          node --check js/v8-join.js
           node --check tools/validate-images.mjs
           node --check tools/build-images.mjs
           node --check tools/check-mission-state.mjs
