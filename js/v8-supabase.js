@@ -1,33 +1,51 @@
 import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY} from "./v8-supabase-config.js";
+import {getValidAccessToken} from "./v8-session.js";
 
-const headers=()=>({"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json","Authorization":`Bearer ${sessionStorage.getItem("pgw-v8-access-token")||SUPABASE_PUBLISHABLE_KEY}`});
+const TRANSIENT_STATUS=new Set([408,409,425,429,500,502,503,504,520]);
 
-async function postgrestUpsert(path,body){
-  let response;
+async function request(path,body,token){
   try{
-    response=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
+    return await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{
       method:"POST",
-      headers:{...headers(),"Prefer":"resolution=merge-duplicates,return=minimal"},
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${token}`,
+        "Prefer":"resolution=merge-duplicates,return=minimal"
+      },
       body:JSON.stringify(body)
     });
   }catch(cause){
     const error=new Error("Supabase network failure",{cause});
-    error.transient=true;
+    error.transient=true;error.stage="data-api-network";
     throw error;
   }
-  if(response.ok) return;
+}
+
+async function postgrestUpsert(path,body){
+  let token=await getValidAccessToken();
+  let response=await request(path,body,token);
+  if(response.status===401){
+    token=await getValidAccessToken({forceRefresh:true});
+    response=await request(path,body,token);
+  }
+  if(response.ok)return;
   let detail="";
   try{detail=await response.text()}catch{}
   const error=new Error(`Supabase ${response.status}${detail?` · ${detail.slice(0,500)}`:""}`);
+  error.stage="data-api";
   error.status=response.status;
-  error.transient=[408,409,425,429,500,502,503,504,520].includes(response.status);
+  error.transient=TRANSIENT_STATUS.has(response.status);
   throw error;
 }
 
 export function supabaseAdapter(){
  return async item=>{
    const ctx=JSON.parse(localStorage.getItem("pgw-v8-sync-context-v1")||"null");
-   if(!ctx?.userId||!ctx?.visitSessionId) throw new Error("Session PGW non reliée à Supabase");
+   if(!ctx?.userId||!ctx?.visitSessionId){
+     const error=new Error("Session PGW non reliée à Supabase");
+     error.stage="sync-context";error.status=401;throw error;
+   }
    if(item.kind==="answer"){
      const p=item.payload;
      await postgrestUpsert(

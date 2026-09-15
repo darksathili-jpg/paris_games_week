@@ -51,6 +51,7 @@ jobs:
           node --check js/v8-sync.js
           node --check js/v8-supabase.js
           node --check js/v8-supabase-config.js
+          node --check js/v8-session.js
           node --check js/v8-join.js
           node --check js/teacher.js
           test -s css/teacher-v8.css
@@ -85,6 +86,9 @@ jobs:
 
       - name: Responsive field tests
         run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible|autosauvegarde|backup local|mission deja validee|queue idempotente|coupure réseau|LIVE join anonyme|LIVE progression M01|FIELD safe-exit|END-OF-VISIT contrat|END-OF-VISIT serveur"
+
+      - name: Session durability gate
+        run: npx playwright test tests/visual/v8-session.spec.js --project=desktop-1440
 
       - name: Six-device PGW rehearsal once
         run: npx playwright test --project=desktop-1440 --grep "PGW REHEARSAL V8.13"
