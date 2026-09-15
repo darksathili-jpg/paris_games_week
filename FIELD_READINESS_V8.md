@@ -64,7 +64,7 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Régression automatisée : shell enseignant V8 présent, héritage visuel absent, thème accessible, pas de débordement horizontal sur les viewports du gate.
 
 
-## FIELD OPERATION GATE — V8.11 — EN VALIDATION
+## FIELD OPERATION GATE — V8.11 — VALIDÉ TERRAIN
 - Aucun master mission ni direction artistique mission modifiés.
 - Appareil élève : reçu local persistant de dernière synchronisation réussie.
 - Départ élève : message vert « Données envoyées · tu peux quitter » uniquement si visite reliée, queue vide et synchronisation distante déjà confirmée.
@@ -72,3 +72,4 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Cockpit enseignant : KPI « À vérifier avant départ » basé sur absence de remontée ou dernière remontée > 5 minutes.
 - Limite volontaire : le serveur ne peut pas connaître une queue locale hors ligne ; le contrôle de départ est donc double : fraîcheur serveur + confirmation verte sur l'appareil élève.
 - Test de non-régression ajouté : coupure réseau pendant M01, état départ bloqué, reconnexion, vidage queue, état départ autorisé.
+- Validation humaine terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
