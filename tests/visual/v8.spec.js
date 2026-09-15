@@ -359,3 +359,61 @@ test("END-OF-VISIT serveur: nouveau JOIN refusé sur session QA fermée",async({
   await expect(page.locator("[data-join-error]")).toContainText(/fermée|invalide/i,{timeout:15000});
   expect(await page.evaluate(()=>localStorage.getItem("pgw-v8-sync-context-v1"))).toBeNull();
 });
+
+
+test("PGW REHEARSAL V8.13 — six élèves isolés et incidents terrain",async({browser})=>{
+  test.setTimeout(120000);
+  const stamp=Date.now();
+  const personas=[
+    ["A","nominal"],["B","reload"],["C","offline"],["D","reopen"],["E","lock"],["F","mobile"]
+  ];
+  const results=[];
+  for(const [id,mode] of personas){
+    const context=await browser.newContext(mode==="mobile"?{viewport:{width:390,height:844}}:{viewport:{width:1280,height:800}});
+    const page=await context.newPage();
+    const pseudo=`REHEARSAL-${id}-${stamp}`;
+    await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+    await page.evaluate(()=>{for(const k of Object.keys(localStorage))if(k.startsWith("pgw-v8"))localStorage.removeItem(k);sessionStorage.clear();});
+    await page.reload({waitUntil:"networkidle"});
+    await page.locator("[data-join-open]").click();
+    await page.locator('[data-join-form] input[name="code"]').fill("PGW26");
+    await page.locator('[data-join-form] input[name="classe"]').fill("TNSI-QA");
+    await page.locator('[data-join-form] input[name="pseudo"]').fill(pseudo);
+    await page.locator('[data-join-form] button[type="submit"]').click();
+    await expect(page.locator("[data-join-open]")).toContainText(pseudo,{timeout:15000});
+
+    if(mode==="lock"){
+      await expect(page.locator('[data-open-mission="3"]')).toBeDisabled();
+      await page.evaluate(()=>document.querySelector('[data-open-mission="3"]')?.click());
+      await expect(page.locator("[data-mission-drawer]")).not.toHaveClass(/is-open/);
+    }
+
+    await page.locator('[data-open-mission="1"]').click();
+    await page.locator('[data-answer="interests"][value="Développement / programmation"]').check();
+    await page.locator('[data-answer="objectives"]').fill(`Répétition générale PGW V8.13 appareil ${id} : vérifier la robustesse du parcours élève en situation réelle.`);
+
+    if(mode==="offline"){await context.setOffline(true);await page.evaluate(()=>window.dispatchEvent(new Event("offline")));}
+    await page.locator('[data-mission-form="1"] button[type="submit"]').click();
+    await expect(page.locator('[data-open-mission="2"]')).toBeEnabled();
+
+    if(mode==="reload"){
+      await page.reload({waitUntil:"networkidle"});
+      await expect(page.locator('[data-open-mission="2"]')).toBeEnabled();
+    }
+    if(mode==="reopen"){
+      await page.close();
+      const p2=await context.newPage();await p2.goto("/preview-v8.html",{waitUntil:"networkidle"});
+      await expect(p2.locator('[data-open-mission="2"]')).toBeEnabled();
+    } else if(mode==="offline"){
+      await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","false");
+      await context.setOffline(false);await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+      await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
+      await expect(page.locator("[data-field-exit]")).toHaveAttribute("data-ready","true");
+    } else {
+      await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
+    }
+    results.push({id,mode,pseudo});
+    await context.close();
+  }
+  console.log("PGW_REHEARSAL_V813",JSON.stringify(results));
+});
