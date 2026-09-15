@@ -114,7 +114,7 @@
       </section>
 
       ${selectedSession?`<section class="summary-grid summary-grid-field"><div class="stat"><small>Participants</small><b>${total}</b></div><div class="stat"><small>Terminés</small><b>${completed}</b></div><div class="stat"><small>Progression</small><b>${avg}%</b></div><div class="stat"><small>À vérifier avant départ</small><b>${stale}</b></div><div class="stat"><small>Code mission</small><b style="font-size:22px">${esc(selectedSession.access_code)}</b></div></section>
-      <section class="teacher-grid"><div class="panel"><h2>Progression par mission</h2><div class="bar-list">${bars||'<div class="empty"><b>Aucune donnée</b>Les barres apparaîtront dès que les élèves commenceront.</div>'}</div></div><div class="panel"><h2>Session</h2><p><b>${esc(selectedSession.title)}</b></p><p style="color:var(--muted)">${esc(selectedSession.event_date)} · ${selectedSession.year}</p><span class="chip ${selectedSession.is_active?"chip-good":"chip-warn"}">${selectedSession.is_active?"Active":"Fermée"}</span><div style="margin-top:16px"><button id="toggle-session" class="btn btn-ghost btn-small">${selectedSession.is_active?"Fermer les inscriptions":"Réouvrir la session"}</button></div></div></section>
+      <section class="teacher-grid"><div class="panel"><h2>Progression par mission</h2><div class="bar-list">${bars||'<div class="empty"><b>Aucune donnée</b>Les barres apparaîtront dès que les élèves commenceront.</div>'}</div></div><div class="panel"><h2>Session</h2><p><b>${esc(selectedSession.title)}</b></p><p style="color:var(--muted)">${esc(selectedSession.event_date)} · ${selectedSession.year}</p><span class="chip ${selectedSession.is_active?"chip-good":"chip-warn"}">${selectedSession.is_active?"Inscriptions ouvertes":"Inscriptions fermées · synchronisation maintenue"}</span><div style="margin-top:16px"><button id="toggle-session" class="btn btn-ghost btn-small">${selectedSession.is_active?"Fermer les inscriptions":"Réouvrir les inscriptions"}</button></div><div style="margin-top:8px"><button id="end-visit" class="btn btn-primary btn-small">Contrôle de fin de visite</button></div></div></section>
       <section><div class="section-head"><div><h2>Participants</h2><p>Cliquez sur un élève pour consulter son questionnaire. Avant le départ, demandez à chaque élève de vérifier le message vert « Données envoyées · tu peux quitter » sur son appareil.</p></div></div><div class="table-wrap">${rows?`<table class="data-table"><thead><tr><th>Élève</th><th>Réponses</th><th>Progression</th><th>XP</th><th>Dernière remontée</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty"><b>Aucun participant</b>Partagez le code de mission aux élèves pour démarrer.</div>'}</div></section>`:`<section class="panel empty"><b>Aucune session.</b>Créez une session pour obtenir un code à partager aux élèves.</section>`}
     </div>
     <dialog id="session-dialog" class="dialog"><div class="dialog-inner"><div class="dialog-head"><h2>Nouvelle session</h2><button class="icon-btn" id="close-dialog" type="button">×</button></div><form id="session-form" class="form-stack"><div class="field"><label>Titre</label><input class="input" name="title" required value="PGW NSI ${new Date().getFullYear()}"></div><div class="field"><label>Année</label><input class="input" type="number" name="year" required min="2026" max="2100" value="${new Date().getFullYear()}"></div><div class="field"><label>Date</label><input class="input" type="date" name="event_date" required value="${config.visitDate||""}"></div><div class="field"><label>Code de mission</label><input class="input" name="access_code" required maxlength="20" value="PGW${String(new Date().getFullYear()).slice(-2)}"></div><button class="btn btn-primary" type="submit">Créer la session</button></form></div></dialog>`;
@@ -128,6 +128,7 @@
     document.getElementById("logout-teacher")?.addEventListener("click",async()=>{await client.auth.signOut();teacher=null;clearInterval(refreshTimer);renderLogin();});
     document.querySelectorAll(".view-student").forEach(b=>b.addEventListener("click",()=>openStudent(b.dataset.user)));
     document.getElementById("toggle-session")?.addEventListener("click",toggleSession);
+    document.getElementById("end-visit")?.addEventListener("click",openEndVisit);
     const dialog=document.getElementById("session-dialog");
     document.getElementById("new-session")?.addEventListener("click",()=>dialog.showModal());
     document.getElementById("close-dialog")?.addEventListener("click",()=>dialog.close());
@@ -140,7 +141,23 @@
   }
 
   async function toggleSession(){
-    if(!selectedSession)return;const next=!selectedSession.is_active;const {error}=await client.from("visit_sessions").update({is_active:next}).eq("id",selectedSession.id);if(error){toast(error.message,"bad");return;}selectedSession.is_active=next;toast(next?"Session rouverte.":"Inscriptions fermées.","good");renderDashboard();
+    if(!selectedSession)return;const next=!selectedSession.is_active;
+    if(!next&&!confirm("Fermer les nouvelles inscriptions ? Les élèves déjà reliés pourront continuer à synchroniser leurs données."))return;
+    const {error}=await client.from("visit_sessions").update({is_active:next}).eq("id",selectedSession.id);if(error){toast(error.message,"bad");return;}selectedSession.is_active=next;toast(next?"Inscriptions rouvertes.":"Nouvelles inscriptions fermées · synchronisation des élèves déjà reliés maintenue.","good");renderDashboard();
+  }
+
+  function openEndVisit(){
+    if(!selectedSession)return;
+    const checks=participants.map(p=>({p,st:statsForUser(p.id)}));
+    const stale=checks.filter(x=>!x.st.lastSync||Date.now()-x.st.lastSync.getTime()>5*60*1000);
+    const ready=checks.filter(x=>x.st.lastSync&&Date.now()-x.st.lastSync.getTime()<=5*60*1000);
+    const back=document.createElement("div");back.className="drawer-backdrop";
+    back.innerHTML=`<aside class="drawer" role="dialog" aria-modal="true" aria-label="Contrôle de fin de visite"><div class="drawer-head"><div><div class="page-kicker">END-OF-VISIT · V8.12</div><h2 style="margin:0">Clôture de la sortie</h2><p style="color:var(--muted)">La fermeture bloque uniquement les nouveaux JOIN. Elle ne bloque pas la synchronisation des élèves déjà reliés.</p></div><button class="icon-btn close-drawer" type="button">×</button></div>
+      <div class="answer-group"><h3>1 · Inscriptions</h3><p><span class="chip ${selectedSession.is_active?"chip-warn":"chip-good"}">${selectedSession.is_active?"Encore ouvertes":"Fermées"}</span></p>${selectedSession.is_active?'<p>Fermez les inscriptions avant le départ du groupe.</p>':'<p>Les nouveaux élèves ne peuvent plus rejoindre la sortie.</p>'}</div>
+      <div class="answer-group"><h3>2 · Dernières remontées</h3><p><b>${ready.length}</b> élève(s) avec remontée serveur récente · <b>${stale.length}</b> à vérifier.</p>${stale.length?`<p>${stale.map(x=>esc(x.p.pseudo||"Sans pseudo")).join(" · ")}</p><p>Sur chacun de ces appareils, attendre le message vert « Données envoyées · tu peux quitter ».</p>`:'<p>✓ Aucun élève à signaler selon la fraîcheur serveur.</p>'}</div>
+      <div class="answer-group"><h3>3 · Export final</h3><p>Quand les appareils à vérifier affichent tous leur confirmation verte, actualisez une dernière fois puis générez le CSV.</p><button class="btn btn-primary" id="end-export" type="button">Exporter le CSV final</button></div>
+    </aside>`;
+    document.body.appendChild(back);const close=()=>back.remove();back.querySelector(".close-drawer").addEventListener("click",close);back.addEventListener("click",e=>{if(e.target===back)close();});back.querySelector("#end-export").addEventListener("click",exportCsv);
   }
 
   function formatAnswer(v){if(v===null||v===undefined||v==="")return "—";if(Array.isArray(v))return v.join(" · ");if(typeof v==="object")return JSON.stringify(v);return String(v);}
