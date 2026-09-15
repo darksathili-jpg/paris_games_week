@@ -101,7 +101,7 @@ function openMission(id){
   const done=required.filter(q=>questionValid(q,answers[q.key])).length;
   drawerContent.innerHTML=`<div class="drawer-hero"><span>MISSION ${String(id).padStart(2,"0")}</span><h2 id="drawer-title">${escapeHtml(m.title)}</h2><p>${escapeHtml(m.description)}</p><div class="drawer-progress"><span style="width:${required.length?Math.round(done/required.length*100):0}%"></span></div><small>${done}/${required.length} critères requis complétés</small></div>
   <form class="drawer-form" data-mission-form="${id}">${m.questions.map(q=>questionControl(q,answers[q.key])).join("")}
-  <div class="drawer-actions"><button type="button" class="drawer-secondary" data-drawer-close>Fermer</button><button type="submit" class="drawer-primary">${isValidated(id)?"Mettre à jour":"Valider la mission"} · +${m.xp} XP</button></div></form>`;
+  <div class="drawer-actions"><button type="button" class="drawer-secondary" data-drawer-close>Fermer</button><button type="submit" class="drawer-primary">${isValidated(id)?"Enregistrer les modifications":`Valider la mission · +${m.xp} XP`}</button></div></form>`;
   drawer.hidden=false; document.body.classList.add("drawer-open");
   drawer.querySelector(".mission-drawer__close")?.focus();
 }
