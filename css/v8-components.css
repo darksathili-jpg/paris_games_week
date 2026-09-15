@@ -111,3 +111,10 @@ linear-gradient(180deg,#071226,#040914);border-left:1px solid rgba(87,239,255,.2
 .sync-status[data-state="pending"]{border-color:#8d7130;color:#ffd86b}
 .sync-status[data-state="syncing"]{border-color:#4c78a8;color:#8fd7ff}
 .sync-status[data-state="synced"]{border-color:#2d8061;color:var(--green)}
+
+/* V8.7 — student join gate */
+.join-chip{width:100%;margin:.8rem 0 0;padding:.62rem .7rem;border:1px solid #355f82;border-radius:9px;background:#071426;color:#d7ecff;font:800 .68rem var(--font-mono);cursor:pointer}
+.join-dialog{position:fixed;inset:0;z-index:90}.join-dialog[hidden]{display:none}.join-dialog__backdrop{position:absolute;inset:0;background:rgba(1,4,12,.72);backdrop-filter:blur(5px)}
+.join-dialog__panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,520px);max-height:90vh;overflow:auto;padding:1.6rem;border:1px solid #294b6c;border-radius:16px;background:#07111f;box-shadow:0 24px 90px #000}
+.join-dialog__panel form{display:grid;gap:13px;margin-top:1rem}.join-dialog__panel label{display:grid;gap:7px;color:#dbe9f8;font:800 .72rem var(--font-mono)}.join-dialog__panel input{width:100%;padding:.8rem;border:1px solid #294b6c;border-radius:9px;background:#0b192b;color:#fff;font:600 .9rem var(--font-sans)}
+.join-help{color:#aebdd2;line-height:1.55}.join-error{min-height:1.2em;color:#ff8d98;font:800 .7rem var(--font-mono)}
