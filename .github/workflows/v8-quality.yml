@@ -1,6 +1,7 @@
 name: V8 Quality Gate
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'preview-v8.html'
