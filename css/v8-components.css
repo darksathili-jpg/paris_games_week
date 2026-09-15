@@ -105,3 +105,9 @@ linear-gradient(180deg,#071226,#040914);border-left:1px solid rgba(87,239,255,.2
   .drawer-form{gap:14px}
   .drawer-question{padding:1.05rem 1.1rem}
 }
+
+/* V8.6 — local-first data safety status */
+.sync-status{margin:.8rem 0;padding:.55rem .65rem;border:1px solid #294b6c;border-radius:9px;background:rgba(3,13,31,.7);color:#aebdd2;font:800 .66rem var(--font-mono)}
+.sync-status[data-state="pending"]{border-color:#8d7130;color:#ffd86b}
+.sync-status[data-state="syncing"]{border-color:#4c78a8;color:#8fd7ff}
+.sync-status[data-state="synced"]{border-color:#2d8061;color:var(--green)}
