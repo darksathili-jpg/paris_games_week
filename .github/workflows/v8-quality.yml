@@ -45,6 +45,9 @@ jobs:
           node --check js/v8-data.js
           node --check js/v8-app.js
           node --check js/v8-quality.js
+          node --check js/v8-sync.js
+          node --check js/v8-supabase.js
+          node --check js/v8-supabase-config.js
           node --check tools/validate-images.mjs
           node --check tools/build-images.mjs
           node --check tools/check-mission-state.mjs
@@ -74,4 +77,4 @@ jobs:
           fi
 
       - name: Visual smoke tests
-        run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible|autosauvegarde|backup local|mission deja validee"
+        run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible|autosauvegarde|backup local|mission deja validee|queue idempotente|coupure réseau"
