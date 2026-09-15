@@ -118,3 +118,7 @@ linear-gradient(180deg,#071226,#040914);border-left:1px solid rgba(87,239,255,.2
 .join-dialog__panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,520px);max-height:90vh;overflow:auto;padding:1.6rem;border:1px solid #294b6c;border-radius:16px;background:#07111f;box-shadow:0 24px 90px #000}
 .join-dialog__panel form{display:grid;gap:13px;margin-top:1rem}.join-dialog__panel label{display:grid;gap:7px;color:#dbe9f8;font:800 .72rem var(--font-mono)}.join-dialog__panel input{width:100%;padding:.8rem;border:1px solid #294b6c;border-radius:9px;background:#0b192b;color:#fff;font:600 .9rem var(--font-sans)}
 .join-help{color:#aebdd2;line-height:1.55}.join-error{min-height:1.2em;color:#ff8d98;font:800 .7rem var(--font-mono)}
+
+/* V8.11 — field departure safety */
+.field-exit{margin:.45rem 0 .8rem;padding:.62rem .7rem;border:1px solid rgba(255,216,94,.35);border-radius:9px;background:rgba(255,216,94,.06);color:#ffd86b;font:900 .64rem var(--font-mono);line-height:1.35}
+.field-exit[data-ready="true"]{border-color:rgba(98,239,173,.4);background:rgba(98,239,173,.06);color:var(--green)}
