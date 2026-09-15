@@ -51,6 +51,8 @@ jobs:
           node --check js/v8-supabase-config.js
           node --check js/v8-join.js
           node --check js/teacher.js
+          test -s css/teacher-v8.css
+          ! grep -Eq 'game-themes|cinematic|theme-system|visual-effects|skin-select|esport|arcade' teacher.html
           node --check tools/validate-images.mjs
           node --check tools/build-images.mjs
           node --check tools/check-mission-state.mjs
