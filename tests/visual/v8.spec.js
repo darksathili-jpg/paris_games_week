@@ -234,3 +234,51 @@ test("LIVE join anonyme puis synchronisation Supabase idempotente",async({page})
   await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:15000}).toBe(0);
   console.log("LIVE_QA_CONTEXT",JSON.stringify({pseudo,classe,...ctx}));
 });
+
+
+test("LIVE progression M01 puis M02 hors ligne et rattrapage automatique",async({page,context})=>{
+  test.setTimeout(60000);
+  const pseudo="QA-PROGRESS-"+Date.now(), classe="QA-V8";
+  await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+  await page.evaluate(()=>{for(const k of Object.keys(localStorage))if(k.startsWith("pgw-v8"))localStorage.removeItem(k);sessionStorage.clear();});
+  await page.reload({waitUntil:"networkidle"});
+
+  await page.locator("[data-join-open]").click();
+  await page.locator('[data-join-form] input[name="code"]').fill("PGW26");
+  await page.locator('[data-join-form] input[name="classe"]').fill(classe);
+  await page.locator('[data-join-form] input[name="pseudo"]').fill(pseudo);
+  await page.locator('[data-join-form] button[type="submit"]').click();
+  await expect(page.locator("[data-join-open]")).toContainText(pseudo,{timeout:15000});
+  const ctx=await page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-context-v1")));
+
+  await page.locator('[data-open-mission="1"]').click();
+  await page.locator('[data-answer="interests"][value="Développement / programmation"]').check();
+  await page.locator('[data-answer="objectives"]').fill("Comparer les technologies utilisées et identifier une formation informatique adaptée à mon projet.");
+  await page.locator('[data-mission-form="1"] button[type="submit"]').click();
+  await expect(page.locator('[data-open-mission="2"]')).toBeEnabled();
+  await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:15000}).toBe(0);
+
+  await context.setOffline(true);
+  await page.evaluate(()=>window.dispatchEvent(new Event("offline")));
+  await page.locator('[data-open-mission="2"]').click();
+  const values={
+    school1:"École QA Alpha",diploma1:"BUT Informatique",admission1:"Baccalauréat et dossier",
+    coding1:"Python, Java et projets",workstudy1:"Stages et alternance",
+    distinct1:"Projets encadrés observés sur le stand et présentés par les étudiants.",
+    school2:"École QA Beta",diploma2:"Licence Informatique",admission2:"Baccalauréat et dossier",
+    coding2:"Python, C et projets",workstudy2:"Stage en troisième année",
+    distinct2:"Parcours universitaire avec projets pratiques présentés pendant la visite.",
+    bestfit:"Le BUT paraît adapté au profil NSI grâce au volume de programmation et aux projets concrets présentés."
+  };
+  for(const [key,value] of Object.entries(values)) await page.locator(`[data-answer="${key}"]`).fill(value);
+  await page.locator('[data-mission-form="2"] button[type="submit"]').click();
+  await expect(page.locator("[data-sync-status]")).toContainText("Synchronisation en attente");
+  const queued=await page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length);
+  expect(queued).toBeGreaterThan(0);
+
+  await context.setOffline(false);
+  await page.evaluate(()=>window.dispatchEvent(new Event("online")));
+  await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem("pgw-v8-sync-queue-v1")||"[]").length),{timeout:20000}).toBe(0);
+  await expect(page.locator("[data-sync-status]")).toContainText("Synchronisé");
+  console.log("LIVE_PROGRESS_CONTEXT",JSON.stringify({pseudo,classe,...ctx,queuedBeforeReconnect:queued}));
+});
