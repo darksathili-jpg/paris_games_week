@@ -159,7 +159,7 @@
   function startAutoRefresh(){clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(document.visibilityState==="visible"&&selectedSession)loadDashboardData(true);},30000);}
 
   async function init(){
-    initTheme();initAmbient();
+    initTheme();
     if(!supa?.configured?.()){renderNotConfigured();return;}
     client=supa.getTeacherClient();await authenticateTeacher();
   }
