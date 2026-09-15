@@ -46,7 +46,7 @@ test("RELEASE clavier: skip-link et mission utilisables sans souris",async({page
   await page.locator('[data-open-mission="1"]').focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("[data-mission-drawer]")).toBeVisible();
-  await expect(page.locator(".mission-drawer__close")).toBeVisible();
+  await expect(page.locator("[data-mission-drawer] .mission-drawer__close")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator("[data-mission-drawer]")).toBeHidden();
 });
