@@ -23,6 +23,9 @@ Le localStorage protège contre un rechargement sur le même appareil, mais ne c
 ### P0 — reprise après réseau dégradé
 La validation d'une mission ne doit jamais dépendre du réseau. Le réseau ne doit servir qu'à synchroniser une copie des réponses.
 
+### P0 — capacité Auth anonyme / IP partagée
+Supabase limite les connexions anonymes par adresse IP. La répétition V8.14 créait artificiellement la répétition six-appareils trois fois (mobile/tablette/desktop), en plus des autres tests LIVE, ce qui pouvait saturer la limite Auth du runner GitHub et produire un faux défaut de JOIN. Le test multi-appareils est désormais exécuté une seule fois : il contient déjà son propre profil mobile. Le jour PGW, vérifier dans Authentication > Rate Limits que la capacité anonymous sign-ins couvre le nombre maximal d'élèves susceptibles de partager une même IP, avec marge de sécurité.
+
 ### P1 — charge de saisie mobile
 61 questions au total. M03 (16 questions), M02 (13), M04 (12) et M06 (12) concentrent l'effort. Ne pas supprimer pédagogiquement des questions sans test élève ; mesurer d'abord temps, abandons et friction.
 
@@ -46,7 +49,6 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Toute évolution fonctionnelle doit conserver le parcours M01→M06, la persistance et le verrouillage.
 - Aucun échec réseau ne doit effacer une réponse élève.
 
-
 ## TEACHER GATE — V8.9
 - Accès enseignant : Supabase Auth + profil role=teacher ; aucune service_role dans le navigateur.
 - RLS : lecture des profiles/responses/progress réservée à soi-même ou is_teacher(); gestion des sessions réservée à is_teacher().
@@ -55,14 +57,12 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Export CSV : pseudo, classe, missions terminées, progression, XP, dernière remontée et réponses pédagogiques.
 - Limite assumée : un élève hors ligne peut avoir une queue locale invisible au serveur ; le cockpit signale donc la fraîcheur de la dernière remontée, pas un faux état « pending » distant.
 
-
 ## TEACHER UX/ART GATE — V8.10 — VALIDÉ TERRAIN
 - Validation humaine du rendu réel : OK.
 - Ancien sélecteur Cyber / Arcade / eSport retiré définitivement.
 - Cockpit aligné sur l'identité V8, avec densité adaptée au rôle enseignant.
 - Pipeline élève et six masters mission gelés : aucune modification nécessaire.
 - Régression automatisée : shell enseignant V8 présent, héritage visuel absent, thème accessible, pas de débordement horizontal sur les viewports du gate.
-
 
 ## FIELD OPERATION GATE — V8.11 — VALIDÉ TERRAIN
 - Aucun master mission ni direction artistique mission modifiés.
@@ -73,7 +73,6 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Limite volontaire : le serveur ne peut pas connaître une queue locale hors ligne ; le contrôle de départ est donc double : fraîcheur serveur + confirmation verte sur l'appareil élève.
 - Test de non-régression ajouté : coupure réseau pendant M01, état départ bloqué, reconnexion, vidage queue, état départ autorisé.
 - Validation humaine terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
-
 
 ## END-OF-VISIT GATE — V8.12 — VALIDÉ
 - Fermeture de session = fermeture des nouveaux JOIN uniquement.
@@ -87,14 +86,12 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Quality Gate final : 48 tests Playwright réussis, dont FIELD safe-exit et les deux contrats END-OF-VISIT.
 - Validation terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
 
-
 ## PGW REHEARSAL GATE — V8.13 — À EXÉCUTER
 - Runbook opérationnel : `PGW_REHEARSAL_V8.md`.
 - Répétition : 1 cockpit enseignant + 6 identités/appareils isolés.
 - Incidents imposés : reload, offline/reconnexion, fermeture/réouverture navigateur, tentative de contournement du verrouillage, fermeture des inscriptions et dernier sync.
 - Verdict GO seulement après cohérence appareil local + cockpit + Supabase + export CSV + CI.
 - Les six masters mission et leur direction artistique restent gelés.
-
 
 ## SYNC RECOVERY — V8.14 — EN VALIDATION
 - Diagnostic V8.13 : 48 tests verts, 3 échecs identiques ; une queue de 3 opérations restait après 20 s dans la répétition multi-appareils.
@@ -103,4 +100,12 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Correction minimale : classification réseau/HTTP, diagnostics persistés dans chaque item, retry borné 0.7/1.5/3/6 s pour 408/409/425/429/5xx/520 et erreurs réseau.
 - Les erreurs permanentes (notamment auth/RLS 401/403) ne sont pas bouclées : elles restent visibles dans la queue pour diagnostic et aucune donnée locale n'est supprimée.
 - Invariant maintenu : un item n'est retiré de la queue qu'après réponse serveur HTTP réussie.
-- Verdict attendu : répétition PGW V8.13 repasse entièrement au vert sans relâcher ses assertions.
+- Résultat V8.14 : récupération de queue améliorée ; dernier run à 50/51, unique échec au JOIN d'un profil de répétition.
+
+## AUTH CAPACITY — V8.15 — EN VALIDATION
+- Documentation Supabase vérifiée : les anonymous sign-ins sont limités par IP ; la documentation annonce 30 requêtes/h par IP par défaut, avec burst, et une configuration à vérifier dans Authentication > Rate Limits.
+- Observation projet : les tests CI ont créé de nombreuses identités anonymes sur quelques heures, ce qui confirme que la répétition automatique consommait réellement la capacité Auth.
+- Correction CI : la répétition 6 appareils ne tourne plus trois fois selon le projet Playwright ; elle tourne une fois sur desktop et inclut déjà un persona mobile.
+- Les autres tests responsive restent exécutés sur mobile/tablette/desktop.
+- JOIN instrumenté : stade d'échec, statut HTTP, code, retry-after et détail sont maintenant journalisés ; un 429 produit un message utilisateur compréhensible.
+- Ne pas augmenter arbitrairement un timeout pour masquer un 429 ou un défaut d'Auth.
