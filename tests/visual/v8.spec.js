@@ -192,7 +192,8 @@ test("coupure réseau conserve la queue puis reprise tente la synchronisation",a
  await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
  await page.evaluate(()=>{localStorage.removeItem("pgw-v8-sync-queue-v1");localStorage.removeItem("pgw-v8-sync-context-v1");});
  await context.setOffline(true);
- await page.reload({waitUntil:"domcontentloaded"});
+ // La page est déjà chargée : simule une coupure pendant la visite, cas terrain réel.
+ await page.evaluate(()=>window.dispatchEvent(new Event("offline")));
  await page.locator('[data-open-mission="1"]').click();
  await page.locator('[data-answer="objectives"]').fill("Réponse créée hors ligne et conservée dans la file locale.");
  await expect(page.locator("[data-sync-status]")).toContainText("Synchronisation en attente");
