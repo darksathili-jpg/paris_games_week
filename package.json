@@ -1,7 +1,7 @@
 {
   "name": "pgw-nsi-quest",
   "private": true,
-  "version": "8.0.0",
+  "version": "8.17.0",
   "type": "module",
   "scripts": {
     "images:validate": "node tools/validate-images.mjs",
@@ -14,8 +14,10 @@
     "test:visual:update": "playwright test --update-snapshots"
   },
   "devDependencies": {
-    "sharp": "^0.34.3",
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.55.0",
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "lighthouse": "^13.4.1",
+    "sharp": "^0.34.3"
   }
 }
