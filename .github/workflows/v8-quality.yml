@@ -74,4 +74,4 @@ jobs:
           fi
 
       - name: Visual smoke tests
-        run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible"
+        run: npx playwright test --grep "images approuvees chargees sans erreur|progression séquentielle|parcours terrain complet|verrouillage impossible|contenu pedagogique complet|drawer lisible|autosauvegarde|backup local"
