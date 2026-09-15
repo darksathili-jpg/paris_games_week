@@ -6,6 +6,8 @@ const read=()=>{try{const q=JSON.parse(localStorage.getItem(QUEUE_KEY)||"[]");re
 const write=q=>localStorage.setItem(QUEUE_KEY,JSON.stringify(q));
 const emit=(state,detail={})=>window.dispatchEvent(new CustomEvent(STATUS_EVENT,{detail:{state,pending:read().length,...detail}}));
 const makeId=(kind,payload)=>[kind,payload.missionId??"",payload.questionKey??""].join(":");
+const LAST_SYNC_KEY="pgw-v8-last-sync-v1";
+export function syncSnapshot(){let last=null;try{last=JSON.parse(localStorage.getItem(LAST_SYNC_KEY)||"null")}catch{}return {pending:read().length,lastSync:last?.at||null,online:navigator.onLine};}
 
 export function setSyncAdapter(next){adapter=next;emit(adapter?"local":"local",{configured:Boolean(adapter)});}
 export function pendingCount(){return read().length;}
@@ -30,7 +32,7 @@ export async function flushQueue(){
        emit("pending",{error:true});return false;
      }
    }
-   emit(q.length?"pending":"synced",{at:Date.now()});return q.length===0;
+   const at=Date.now(); if(!q.length)localStorage.setItem(LAST_SYNC_KEY,JSON.stringify({at})); emit(q.length?"pending":"synced",{at});return q.length===0;
  }finally{flushing=false}
 }
 window.addEventListener("online",()=>void flushQueue());
