@@ -161,3 +161,14 @@ test("backup local récupérable si état principal corrompu",async({page})=>{
  await page.locator('[data-open-mission="1"]').click();
  await expect(page.locator('[data-answer="objectives"]')).toHaveValue("Réponse restaurée depuis le backup local.");
 });
+
+
+test("mission deja validee ne promet pas de nouveaux XP",async({page})=>{
+ await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+ await page.evaluate(()=>localStorage.setItem("pgw-v8-progress-v1",JSON.stringify({answers:{},validated:[1]})));
+ await page.reload({waitUntil:"networkidle"});
+ await page.locator('[data-open-mission="1"]').click();
+ const submit=page.locator('[data-mission-form="1"] button[type="submit"]');
+ await expect(submit).toHaveText("Enregistrer les modifications");
+ await expect(submit).not.toContainText("+100 XP");
+});
