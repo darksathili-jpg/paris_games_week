@@ -73,3 +73,13 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Limite volontaire : le serveur ne peut pas connaître une queue locale hors ligne ; le contrôle de départ est donc double : fraîcheur serveur + confirmation verte sur l'appareil élève.
 - Test de non-régression ajouté : coupure réseau pendant M01, état départ bloqué, reconnexion, vidage queue, état départ autorisé.
 - Validation humaine terrain : OK. Gate gelé ; toute régression de ce contrat doit faire échouer la CI.
+
+
+## END-OF-VISIT GATE — V8.12 — EN VALIDATION
+- Fermeture de session = fermeture des nouveaux JOIN uniquement.
+- Un profil student déjà relié reste associé à sa visit_session même lorsque is_active=false.
+- Les RLS de responses/progress restent basées sur auth.uid() + visit_session_id du profil : une fermeture ne coupe donc pas le vidage d'une queue existante.
+- Cockpit enseignant : confirmation explicite avant fermeture, libellé « Inscriptions fermées · synchronisation maintenue », panneau « Contrôle de fin de visite ».
+- Procédure : fermer inscriptions → actualiser → traiter « À vérifier » → exiger le message vert sur les appareils concernés → actualiser → exporter CSV final.
+- Export final : pseudo, classe, missions terminées, progression, XP, dernière remontée et réponses.
+- Test CI V8.12 ajouté et obligatoire. Le test de sécurité serveur complémentaire doit confirmer qu'un nouveau JOIN est refusé sur session fermée tandis qu'un élève déjà relié peut toujours écrire/synchroniser.
