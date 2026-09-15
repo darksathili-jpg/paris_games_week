@@ -97,3 +97,11 @@ linear-gradient(180deg,#071226,#040914);border-left:1px solid rgba(87,239,255,.2
 .drawer-primary{border:1px solid rgba(255,93,200,.55);background:linear-gradient(90deg,#7433d3,#b532d8);color:white}.drawer-secondary{border:1px solid #294b6c;background:#07162b;color:#bed0e5}
 .v8-toast{position:fixed;left:50%;bottom:22px;z-index:1200;max-width:min(92vw,620px);transform:translate(-50%,30px);opacity:0;pointer-events:none;padding:.8rem 1rem;border:1px solid rgba(87,239,255,.35);border-radius:12px;background:#07152d;color:#fff;box-shadow:0 18px 60px rgba(0,0,0,.45);font-weight:800;transition:.2s ease}
 .v8-toast.is-visible{transform:translate(-50%,0);opacity:1}
+
+/* V8.5 — desktop drawer field-UX correction */
+@media (min-width:1101px){
+  .mission-drawer__backdrop{background:rgba(1,4,12,.56);backdrop-filter:blur(3px)}
+  .mission-drawer__panel{width:min(860px,58vw);padding:clamp(1.35rem,2.2vw,2.35rem)}
+  .drawer-form{gap:14px}
+  .drawer-question{padding:1.05rem 1.1rem}
+}
