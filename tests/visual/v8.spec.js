@@ -137,3 +137,27 @@ test("drawer lisible et contenu dans le viewport",async({page})=>{
   await expect(page.locator(".mission-drawer__close")).toBeVisible();
   await expect(page.locator('[data-mission-form="1"] button[type="submit"]')).toBeVisible();
 });
+
+
+test("autosauvegarde des réponses avant validation",async({page})=>{
+ await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+ await page.evaluate(()=>{localStorage.removeItem("pgw-v8-progress-v1");localStorage.removeItem("pgw-v8-progress-v1-backup");});
+ await page.reload({waitUntil:"networkidle"});
+ await page.locator('[data-open-mission="1"]').click();
+ await page.locator('[data-answer="objectives"]').fill("Cette réponse est sauvegardée avant validation complète de la mission pour résister à une fermeture accidentelle.");
+ await page.locator('[data-drawer-close]').last().click();
+ await page.reload({waitUntil:"networkidle"});
+ await page.locator('[data-open-mission="1"]').click();
+ await expect(page.locator('[data-answer="objectives"]')).toHaveValue(/sauvegardée avant validation/);
+});
+
+test("backup local récupérable si état principal corrompu",async({page})=>{
+ await page.goto("/preview-v8.html",{waitUntil:"networkidle"});
+ await page.evaluate(()=>{
+   localStorage.setItem("pgw-v8-progress-v1","{corrompu");
+   localStorage.setItem("pgw-v8-progress-v1-backup",JSON.stringify({answers:{"1":{objectives:"Réponse restaurée depuis le backup local."}},validated:[]}));
+ });
+ await page.reload({waitUntil:"networkidle"});
+ await page.locator('[data-open-mission="1"]').click();
+ await expect(page.locator('[data-answer="objectives"]')).toHaveValue("Réponse restaurée depuis le backup local.");
+});
