@@ -94,3 +94,13 @@ Le mode enseignant ne doit jamais utiliser de clé service_role dans le navigate
 - Incidents imposés : reload, offline/reconnexion, fermeture/réouverture navigateur, tentative de contournement du verrouillage, fermeture des inscriptions et dernier sync.
 - Verdict GO seulement après cohérence appareil local + cockpit + Supabase + export CSV + CI.
 - Les six masters mission et leur direction artistique restent gelés.
+
+
+## SYNC RECOVERY — V8.14 — EN VALIDATION
+- Diagnostic V8.13 : 48 tests verts, 3 échecs identiques ; une queue de 3 opérations restait après 20 s dans la répétition multi-appareils.
+- Documentation Supabase vérifiée avant correction : les erreurs transitoires doivent être retentées avec backoff ; les écritures doivent rester idempotentes ; les erreurs complètes doivent être conservées pour diagnostic.
+- Notre client utilise actuellement le Data API par fetch direct : il ne faut donc pas supposer que les retries du SDK supabase-js protègent ces POST.
+- Correction minimale : classification réseau/HTTP, diagnostics persistés dans chaque item, retry borné 0.7/1.5/3/6 s pour 408/409/425/429/5xx/520 et erreurs réseau.
+- Les erreurs permanentes (notamment auth/RLS 401/403) ne sont pas bouclées : elles restent visibles dans la queue pour diagnostic et aucune donnée locale n'est supprimée.
+- Invariant maintenu : un item n'est retiré de la queue qu'après réponse serveur HTTP réussie.
+- Verdict attendu : répétition PGW V8.13 repasse entièrement au vert sans relâcher ses assertions.
