@@ -1,11 +1,10 @@
 # V8 — FIELD READINESS GATE
 
-> Source de vérité après ART/RESPONSIVE gates. Objectif : rendre l'application fiable dans les conditions réelles de la Paris Games Week.
+> Source de vérité de finalisation pour PGW NSI Quest 2026.
 
-## État au 16 septembre 2026
+## État final au 16 septembre 2026
 - 6/6 masters : QA_PASSED.
-- 6/6 missions : dérivés AVIF/WebP 480/720/1200 reconstruits par CI.
-- Audit terrain automatisé : validé sur mobile, tablette et desktop.
+- 6/6 missions : dérivés AVIF/WebP reconstruits par CI.
 - Parcours M01 → M06 : validé.
 - Persistance locale + backup : validés.
 - Verrouillage séquentiel : validé.
@@ -27,57 +26,32 @@ Le pilote avec de vrais élèves a été volontairement annulé. La charge réel
 - Aucun refresh de session ne doit créer un nouvel utilisateur anonyme.
 - Aucun test ni seuil ne doit être relâché pour obtenir artificiellement un gate vert.
 
-## TEACHER GATE — V8.9 — VALIDÉ
-- Accès enseignant : Supabase Auth + profil role=teacher ; aucune service_role dans le navigateur.
-- RLS : lecture des profiles/responses/progress réservée à soi-même ou is_teacher(); gestion des sessions réservée à is_teacher().
-- Progression cockpit : source de vérité = table progress (completed/xp).
-- Synchronisation cockpit : affiche la dernière remontée connue côté serveur.
-- Export CSV : pseudo, classe, missions terminées, progression, XP, dernière remontée et réponses pédagogiques.
+## Gates validés
+### V8.9 — Teacher Gate
+Accès enseignant, RLS, progression cockpit et export CSV validés.
 
-## TEACHER UX/ART GATE — V8.10 — VALIDÉ
-- Cockpit aligné sur l'identité V8.
-- Ancien sélecteur Cyber / Arcade / eSport retiré.
-- Pipeline élève et six masters mission gelés.
+### V8.10 — Teacher UX/Art Gate
+Cockpit aligné sur l'identité V8 ; ancien héritage visuel retiré ; six masters gelés.
 
-## FIELD OPERATION GATE — V8.11 — VALIDÉ
-- Appareil élève : reçu local persistant de dernière synchronisation réussie.
-- Départ élève : message vert uniquement si visite reliée, queue vide et synchronisation distante confirmée.
-- Hors ligne / queue non vide : message explicite d'attente.
-- Test coupure réseau → reconnexion → vidage queue validé.
+### V8.11 — Field Operation Gate
+Autosauvegarde, reprise réseau et contrôle de départ élève validés.
 
-## END-OF-VISIT GATE — V8.12 — VALIDÉ
-- Fermeture de session = fermeture des nouveaux JOIN uniquement.
-- Un élève déjà relié peut terminer sa synchronisation.
-- Cockpit enseignant : contrôle de fin de visite + export CSV final.
-- Session QA fermée : nouveau JOIN refusé, synchronisation existante maintenue.
+### V8.12 — End-of-Visit Gate
+Fermeture des nouveaux JOIN sans interrompre les synchronisations existantes ; export final validé.
 
-## PGW REHEARSAL GATE — V8.13/V8.15 — VALIDÉ
-- Répétition : 1 cockpit enseignant + 6 identités/appareils isolés.
-- Incidents : reload, offline/reconnexion, fermeture/réouverture contexte, verrouillage, fermeture des inscriptions et dernier sync.
-- Répétition exécutée une seule fois pour ne pas consommer artificiellement le quota Auth.
-- Résultat : PASS.
+### V8.13/V8.15 — PGW Rehearsal Gate
+Répétition 1 cockpit + 6 identités/appareils isolés, avec reload, offline/reconnexion, fermeture/réouverture, verrouillage et fin de visite : PASS.
 
-## SYNC RECOVERY — V8.14/V8.15 — VALIDÉ
-- Queue locale idempotente.
-- Retry borné avec backoff pour erreurs réseau/transitoires.
-- Les erreurs permanentes auth/RLS ne sont pas bouclées aveuglément.
-- Un item n'est retiré de la queue qu'après réponse serveur HTTP réussie.
+### V8.14/V8.15 — Sync Recovery
+Queue idempotente, retry/backoff et conservation des opérations non acquittées : validés.
 
-## AUTH CAPACITY — V8.15 — VALIDÉ
-- Anonymous sign-ins limités par IP : capacité terrain configurée à **60/h**.
-- JOIN instrumenté pour erreurs réseau, statut HTTP et 429.
-- Quality Gate V8.15 et Pages : PASS.
+### V8.15 — Auth Capacity
+Anonymous sign-ins configurés à **60/h** ; JOIN instrumenté ; Quality Gate et Pages : PASS.
 
-## SESSION DURABILITY — V8.16 — VALIDÉ
-- Session Auth élève persistée dans `localStorage` sous structure versionnée.
-- Refresh proactif avant expiration et refresh après 401.
-- Rotation du refresh token persistée immédiatement.
-- Web Locks utilisé si disponible pour éviter les refresh concurrents.
-- Échec transitoire de refresh : contexte et queue conservés.
-- Un JOIN réutilise l'identité existante au lieu de recréer un compte anonyme.
-- Test dédié fermeture/réouverture + refresh + panne 503 + reprise : PASS.
+### V8.16 — Session Durability
+Session Auth persistante, refresh contrôlé, rotation de refresh token, Web Locks, même identité après réouverture et queue conservée en cas de panne : PASS.
 
-## RELEASE GATE RENFORCÉ — V8.17 — VALIDÉ
+### V8.17 — Release Gate renforcé
 - Quality Gate historique : PASS.
 - Session Durability : PASS.
 - Répétition six appareils : PASS.
