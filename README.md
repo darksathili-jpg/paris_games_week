@@ -149,7 +149,7 @@ Documents techniques utiles :
 - [`ART_DIRECTION_V8.md`](ART_DIRECTION_V8.md) — direction artistique ;
 - [`IMAGE_PIPELINE_V8.md`](IMAGE_PIPELINE_V8.md) — chaîne de production des images ;
 - [`V8_PRODUCTION_CONTRACT.md`](V8_PRODUCTION_CONTRACT.md) — règles de non-régression ;
-- [`FIELD_READINESS_V8.md`](FIELD_READINESS_V8.md) — validation terrain technique ;
+- [`FIELD_READINESS_V8.md`](FIELD_READINESS_V8.md) — état final des gates ;
 - [`PGW_REHEARSAL_V8.md`](PGW_REHEARSAL_V8.md) — répétition opérationnelle ;
 - [`RELEASE_GATE_V8.md`](RELEASE_GATE_V8.md) — critères de release ;
 - [`RELEASE_CANDIDATE_V8.md`](RELEASE_CANDIDATE_V8.md) — snapshot RC1 et politique de gel.
