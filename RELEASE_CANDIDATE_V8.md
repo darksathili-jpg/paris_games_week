@@ -3,20 +3,22 @@
 ## Snapshot gelé
 - Release Candidate : **RC1**
 - Branche gelée : `release/pgw-2026-rc1`
-- Commit de référence : `227a13e53231e7590a2a0a192069412708d3c514`
+- Commit de référence : `2493de432cbafe2ef3f21bd42f49beb269467b6c`
 - Version applicative : **V8.17 — Release Gate renforcé**
 - Cible : Paris Games Week 2026 — 23 octobre 2026
 
 ## Verdict
 **GO RC**.
 
-Le Release Gate renforcé est entièrement vert sur le commit de référence :
+Le Release Gate renforcé est entièrement vert sur le snapshot nettoyé du dépôt :
 - Quality Gate historique : PASS
 - Session Durability V8.16 : PASS
 - Répétition PGW six appareils : PASS
 - Release Playwright renforcé : PASS
 - Lighthouse mobile release budget : PASS
 - Déploiement GitHub Pages : PASS
+- Nettoyage contrôlé du dépôt : PASS
+- README professionnel et cohérent : PASS
 
 ## Contrat de gel
 À partir de RC1 :
@@ -40,7 +42,7 @@ Le pilote avec de vrais élèves a été volontairement annulé. La charge réel
 - queue conservée en cas d'échec réseau/Auth ;
 - cockpit enseignant, contrôle de fin de visite et export CSV ;
 - fermeture des nouvelles inscriptions sans empêcher les dernières synchronisations ;
-- contrôle responsive mobile/tablette/desktop ;
+- contrôle responsive mobile/tablette/desktop, dont smartphone 360 px au Release Gate ;
 - accessibilité automatisée, clavier, absence d'erreurs JS/ressources locales en échec ;
 - budget Lighthouse mobile et vérification d'absence de clé privilégiée côté client.
 
@@ -51,4 +53,4 @@ Le pilote avec de vrais élèves a été volontairement annulé. La charge réel
 - Avant le départ d'un élève, exiger l'état vert indiquant que les données ont été envoyées.
 
 ## Politique de promotion
-RC1 devient la version PGW finale si aucun défaut bloquant n'est reproduit avant l'événement. Toute correction ultérieure crée une RC2, RC3, etc., toujours depuis un commit dont le Release Gate complet est vert.
+RC1 est la version PGW gelée. Toute correction ultérieure doit être motivée par un défaut bloquant reproduit et crée une RC2, RC3, etc., depuis un commit dont le Release Gate complet est vert.
