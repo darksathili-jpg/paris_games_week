@@ -6,15 +6,17 @@ PGW NSI Quest transforme la visite en parcours d'investigation : six missions pr
 
 ## État du projet
 
-- **Version applicative : V8.17 — Release Gate renforcé**
-- **Base technique validée : V8.16**
+- **Version : V8.17 — Release Candidate RC1**
+- **Release Gate renforcé : validé**
+- **Base technique : V8.16 Session Durability validée**
 - **6 missions · 61 questions · 6 badges · 1350 XP**
 - **Architecture local-first** avec synchronisation Supabase
 - **Responsive** : smartphone, tablette et desktop
 - **Déploiement** : GitHub Pages
 - **Backend** : Supabase Auth + PostgreSQL + Row Level Security
+- **Branche gelée** : `release/pgw-2026-rc1`
 
-Après le nettoyage contrôlé du dépôt, la V8.17 repasse automatiquement le Release Gate complet avant mise à jour de la Release Candidate.
+Le nettoyage contrôlé du dépôt et le README final ont repassé le **V8.17 Release Gate complet avec succès**. Le snapshot applicatif de référence est le commit `2493de432cbafe2ef3f21bd42f49beb269467b6c`.
 
 ## Accès
 
@@ -79,7 +81,7 @@ Le cockpit enseignant permet de suivre les remontées autorisées par les politi
 └── .github/workflows/               # Quality Gate + GitHub Pages
 ```
 
-Les dérivés AVIF/WebP ne sont pas conservés comme sources : ils sont reconstruits automatiquement à partir des six masters PNG lors du pipeline de déploiement.
+Les anciens placeholders graphiques SVG devenus inutiles ont été supprimés lors du nettoyage contrôlé. Les dérivés AVIF/WebP sont reconstruits automatiquement à partir des six masters PNG lors du pipeline de déploiement.
 
 ## Installation locale
 
@@ -98,7 +100,7 @@ http://127.0.0.1:4173/preview-v8.html
 
 ## Tests et Release Gate
 
-Le projet utilise Playwright et Lighthouse pour empêcher les régressions avant publication.
+Le projet utilise Playwright, Axe et Lighthouse pour empêcher les régressions avant publication.
 
 ```bash
 npm run images:validate
@@ -118,7 +120,7 @@ Le workflow `V8 Quality Gate` vérifie notamment :
 - cockpit enseignant ;
 - 0 erreur JavaScript non gérée ;
 - 0 ressource locale 4xx/5xx ;
-- accessibilité et navigation clavier ;
+- accessibilité automatisée et navigation clavier ;
 - smartphone 360 px ;
 - absence de secrets privilégiés dans le frontend ;
 - budget Lighthouse mobile.
@@ -136,7 +138,7 @@ Ne jamais placer dans le dépôt ni dans le navigateur :
 - le mot de passe PostgreSQL ;
 - tout secret donnant des privilèges administrateur.
 
-La configuration terrain utilise actuellement **60 connexions anonymes par heure** afin de conserver une marge lorsque plusieurs élèves partagent la même adresse IP publique.
+La configuration terrain utilise **60 connexions anonymes par heure** afin de conserver une marge lorsque plusieurs élèves partagent la même adresse IP publique.
 
 ## Pipeline graphique
 
@@ -150,17 +152,17 @@ Documents techniques utiles :
 - [`FIELD_READINESS_V8.md`](FIELD_READINESS_V8.md) — validation terrain technique ;
 - [`PGW_REHEARSAL_V8.md`](PGW_REHEARSAL_V8.md) — répétition opérationnelle ;
 - [`RELEASE_GATE_V8.md`](RELEASE_GATE_V8.md) — critères de release ;
-- [`RELEASE_CANDIDATE_V8.md`](RELEASE_CANDIDATE_V8.md) — état de la Release Candidate.
+- [`RELEASE_CANDIDATE_V8.md`](RELEASE_CANDIDATE_V8.md) — snapshot RC1 et politique de gel.
 
 ## Politique de finalisation
 
-La stratégie de fin de projet est volontairement stricte :
+La stratégie de fin de projet est désormais achevée :
 
-**V8.16 validée → V8.17 Release Gate renforcé → correction des seuls défauts mesurés → Release Candidate PGW → gel.**
+**V8.16 validée → V8.17 Release Gate renforcé → correction des seuls défauts mesurés → Release Candidate PGW RC1 → gel.**
 
-Le pilote avec de vrais élèves a été volontairement supprimé du processus. Le risque résiduel accepté concerne donc la charge réelle de saisie des 61 questions ; il reste documenté et ne doit pas conduire à modifier le contenu sur simple intuition.
+Le pilote avec de vrais élèves a été volontairement supprimé du processus. Le risque résiduel accepté concerne la charge réelle de saisie des 61 questions ; il reste documenté et ne doit pas conduire à modifier le contenu sur simple intuition.
 
-Après le `GO RC`, aucune nouvelle fonctionnalité ou retouche esthétique n'est ajoutée. Seules des corrections bloquantes et reproductibles peuvent justifier une nouvelle Release Candidate.
+Après le `GO RC`, aucune nouvelle fonctionnalité ou retouche esthétique n'est ajoutée. Seules des corrections bloquantes, reproductibles et nécessaires au terrain peuvent justifier une RC2 ou ultérieure, après passage intégral du Release Gate.
 
 ## Contexte pédagogique
 
