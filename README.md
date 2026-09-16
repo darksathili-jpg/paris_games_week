@@ -1,96 +1,85 @@
 # PGW NSI Quest 2026
 
-Application web pédagogique conçue pour accompagner une classe de **Terminale NSI du lycée Watteau de Valenciennes** lors de la **Paris Games Week 2026**, le 23 octobre 2026.
+Application web pédagogique destinée aux élèves de **Terminale NSI du lycée Watteau de Valenciennes** pour la **Paris Games Week 2026**, le 23 octobre 2026.
 
-La visite est organisée sous la forme de six missions progressives : observation, formations, code, innovation, rencontre professionnelle et synthèse finale. L'application fonctionne selon une architecture **local-first** : le travail de l'élève est sauvegardé immédiatement dans le navigateur puis synchronisé vers Supabase lorsque le réseau est disponible.
+PGW NSI Quest transforme la visite en parcours d'investigation : six missions progressives amènent les élèves à observer les technologies, interroger les formations et les professionnels, analyser des mécanismes informatiques et produire une synthèse finale.
 
 ## État du projet
 
-- **Version : V8.17 — Release Candidate RC1**
-- **Release Gate renforcé : validé**
-- **Branche gelée : `release/pgw-2026-rc1`**
-- **6 missions / 61 questions / 6 badges / 1350 XP**
-- **Responsive : mobile 390 px, tablette 760 px, desktop 1440 px**
-- **GitHub Pages : déploiement automatique**
-- **Backend : Supabase Auth + PostgreSQL + RLS**
+- **Version applicative : V8.17 — Release Gate renforcé**
+- **Base technique validée : V8.16**
+- **6 missions · 61 questions · 6 badges · 1350 XP**
+- **Architecture local-first** avec synchronisation Supabase
+- **Responsive** : smartphone, tablette et desktop
+- **Déploiement** : GitHub Pages
+- **Backend** : Supabase Auth + PostgreSQL + Row Level Security
 
-La Release Candidate RC1 est documentée dans [`RELEASE_CANDIDATE_V8.md`](RELEASE_CANDIDATE_V8.md).
+Après le nettoyage contrôlé du dépôt, la V8.17 repasse automatiquement le Release Gate complet avant mise à jour de la Release Candidate.
 
 ## Accès
 
 - Application élève : https://darksathili-jpg.github.io/paris_games_week/
-- Version V8 directe : https://darksathili-jpg.github.io/paris_games_week/preview-v8.html
+- Application V8 directe : https://darksathili-jpg.github.io/paris_games_week/preview-v8.html
 - Cockpit enseignant : https://darksathili-jpg.github.io/paris_games_week/teacher.html
 
-## Fonctionnalités principales
+## Fonctionnement élève
 
-### Élève
+L'application est conçue pour rester exploitable dans les conditions réelles d'un salon où le réseau peut être instable.
 
-- six missions à déverrouillage séquentiel ;
+- déverrouillage séquentiel des six missions ;
 - XP, badges et rang de progression ;
-- autosauvegarde de chaque réponse avant validation ;
-- copie locale de secours en cas de corruption de l'état principal ;
-- fonctionnement sans réseau après chargement de la page ;
+- autosauvegarde avant validation ;
+- sauvegarde locale de secours ;
+- fonctionnement local après chargement de la page ;
 - file de synchronisation persistante et idempotente ;
 - reprise automatique après coupure réseau ;
 - session Supabase anonyme durable après fermeture/réouverture du navigateur ;
-- renouvellement contrôlé du token d'accès sans recréer inutilement un utilisateur ;
-- indicateur explicite de l'état de synchronisation et contrôle avant départ.
+- renouvellement contrôlé du token d'accès ;
+- indicateur de synchronisation et contrôle de fin de visite.
 
-### Enseignant
+## Fonctionnement enseignant
 
-- authentification par compte enseignant ;
-- lecture des progressions et des réponses autorisées par les politiques RLS ;
-- contrôle de fraîcheur des dernières remontées ;
-- fermeture des nouvelles inscriptions sans bloquer la synchronisation des élèves déjà reliés ;
+Le cockpit enseignant permet de suivre les remontées autorisées par les politiques RLS :
+
+- authentification enseignant ;
+- lecture des progressions et réponses ;
+- contrôle de fraîcheur des synchronisations ;
+- fermeture des nouvelles inscriptions sans interrompre la synchronisation des élèves déjà reliés ;
 - export CSV final.
 
-## Architecture
+## Architecture du dépôt
 
 ```text
 .
-├── preview-v8.html            # application élève V8
-├── teacher.html               # cockpit enseignant
-├── config.js                  # configuration publique du frontend enseignant
-├── config.example.js          # exemple de configuration
+├── index.html                      # point d'entrée GitHub Pages
+├── preview-v8.html                 # application élève
+├── teacher.html                    # cockpit enseignant
+├── config.js                       # configuration publique du cockpit
+├── config.example.js               # exemple de configuration
 ├── assets/
-│   └── v8/                    # masters et dérivés AVIF/WebP validés
-├── css/
-│   ├── v8-components.css
-│   ├── v8-responsive.css
-│   ├── v8-motion.css
-│   ├── v8-tokens.css
-│   └── teacher-v8.css
+│   ├── watteau-logo.svg
+│   └── v8/
+│       ├── masters/                 # 6 illustrations sources PNG validées
+│       └── mission-status.json      # état du pipeline graphique
+├── css/                             # styles V8 élève + enseignant
 ├── js/
-│   ├── content.js             # contenu pédagogique des 6 missions
-│   ├── v8-app.js              # moteur de progression et UI élève
-│   ├── v8-session.js          # session Auth durable / refresh
-│   ├── v8-sync.js             # queue local-first et reprise réseau
-│   ├── v8-supabase.js         # Data API Supabase
-│   ├── v8-join.js             # liaison élève / sortie
-│   ├── v8-quality.js          # contrôles runtime
-│   ├── teacher.js             # cockpit enseignant
-│   └── supabase-client.js     # client Supabase enseignant
+│   ├── content.js                   # contenu pédagogique
+│   ├── v8-app.js                    # UI + progression
+│   ├── v8-session.js                # persistance/refresh Auth
+│   ├── v8-sync.js                   # queue local-first
+│   ├── v8-supabase.js               # écritures Supabase
+│   ├── v8-join.js                   # liaison à la sortie
+│   ├── teacher.js                   # cockpit enseignant
+│   └── supabase-client.js           # client enseignant
 ├── supabase/
 │   ├── schema.sql
 │   └── promote_teacher.sql
-├── tests/                     # tests Playwright terrain et release
-├── tools/                     # pipeline d'images et contrôles CI
-└── .github/workflows/         # qualité et déploiement GitHub Pages
+├── tests/visual/                    # tests Playwright terrain/release
+├── tools/                           # pipeline images + contrôles CI
+└── .github/workflows/               # Quality Gate + GitHub Pages
 ```
 
-## Sécurité Supabase
-
-Le frontend peut contenir l'URL du projet et une **clé publishable** Supabase : elles sont conçues pour être publiques. La sécurité repose sur les politiques **Row Level Security (RLS)** et sur l'identité Auth de l'utilisateur.
-
-Ne jamais placer dans le dépôt ou dans le navigateur :
-
-- `service_role` ;
-- une clé `sb_secret_...` ;
-- le mot de passe de la base PostgreSQL ;
-- tout secret donnant des privilèges administrateur.
-
-La configuration terrain actuelle utilise **60 connexions anonymes par heure** afin de conserver une marge lorsque plusieurs élèves partagent la même adresse IP publique.
+Les dérivés AVIF/WebP ne sont pas conservés comme sources : ils sont reconstruits automatiquement à partir des six masters PNG lors du pipeline de déploiement.
 
 ## Installation locale
 
@@ -107,24 +96,9 @@ Puis ouvrir :
 http://127.0.0.1:4173/preview-v8.html
 ```
 
-## Tests et qualité
+## Tests et Release Gate
 
-Le projet ne considère pas une version comme validée sur la seule base d'un contrôle visuel. Les Quality Gates couvrent notamment :
-
-- validation des masters et génération AVIF/WebP ;
-- parcours complet M01 → M06 ;
-- verrouillage séquentiel ;
-- autosauvegarde et restauration ;
-- coupure réseau et reprise ;
-- synchronisation Supabase idempotente ;
-- durabilité et refresh de session ;
-- répétition multi-appareils ;
-- cockpit enseignant ;
-- accessibilité automatisée et navigation clavier ;
-- erreurs JavaScript et ressources locales en échec ;
-- budget Lighthouse mobile.
-
-Commandes utiles :
+Le projet utilise Playwright et Lighthouse pour empêcher les régressions avant publication.
 
 ```bash
 npm run images:validate
@@ -132,38 +106,62 @@ npm run images:build
 npm run test:visual
 ```
 
-Les workflows GitHub Actions exécutent ces contrôles automatiquement sur les modifications concernées.
+Le workflow `V8 Quality Gate` vérifie notamment :
 
-## Pipeline graphique V8
+- intégrité des masters et génération AVIF/WebP ;
+- parcours complet M01 → M06 ;
+- verrouillage séquentiel ;
+- autosauvegarde, restauration et backup ;
+- offline/reconnexion et queue idempotente ;
+- session Auth durable et refresh token ;
+- répétition multi-appareils ;
+- cockpit enseignant ;
+- 0 erreur JavaScript non gérée ;
+- 0 ressource locale 4xx/5xx ;
+- accessibilité et navigation clavier ;
+- smartphone 360 px ;
+- absence de secrets privilégiés dans le frontend ;
+- budget Lighthouse mobile.
 
-Les six illustrations validées sont conservées dans `assets/v8/masters/`. Le pipeline génère les déclinaisons responsives en AVIF et WebP. Les masters sont gelés : ils ne doivent être remplacés qu'en présence d'un défaut bloquant reproduit.
+Les critères détaillés sont définis dans [`RELEASE_GATE_V8.md`](RELEASE_GATE_V8.md).
 
-Documents de référence :
+## Sécurité Supabase
+
+L'URL du projet et la **clé publishable** peuvent être présentes dans le frontend : elles sont destinées à être publiques. La sécurité repose sur **Supabase Auth** et les politiques **Row Level Security (RLS)**.
+
+Ne jamais placer dans le dépôt ni dans le navigateur :
+
+- une clé `service_role` ;
+- une clé `sb_secret_...` ;
+- le mot de passe PostgreSQL ;
+- tout secret donnant des privilèges administrateur.
+
+La configuration terrain utilise actuellement **60 connexions anonymes par heure** afin de conserver une marge lorsque plusieurs élèves partagent la même adresse IP publique.
+
+## Pipeline graphique
+
+Les six illustrations finales sont gelées dans `assets/v8/masters/` au format PNG. Le pipeline produit automatiquement les formats WebP et AVIF en plusieurs largeurs sans upscale.
+
+Documents techniques utiles :
 
 - [`ART_DIRECTION_V8.md`](ART_DIRECTION_V8.md) — direction artistique ;
-- [`IMAGE_PIPELINE_V8.md`](IMAGE_PIPELINE_V8.md) — pipeline des images ;
-- [`V8_PRODUCTION_CONTRACT.md`](V8_PRODUCTION_CONTRACT.md) — contrat de non-régression ;
-- [`FIELD_READINESS_V8.md`](FIELD_READINESS_V8.md) — historique des gates terrain ;
+- [`IMAGE_PIPELINE_V8.md`](IMAGE_PIPELINE_V8.md) — chaîne de production des images ;
+- [`V8_PRODUCTION_CONTRACT.md`](V8_PRODUCTION_CONTRACT.md) — règles de non-régression ;
+- [`FIELD_READINESS_V8.md`](FIELD_READINESS_V8.md) — validation terrain technique ;
 - [`PGW_REHEARSAL_V8.md`](PGW_REHEARSAL_V8.md) — répétition opérationnelle ;
 - [`RELEASE_GATE_V8.md`](RELEASE_GATE_V8.md) — critères de release ;
-- [`RELEASE_CANDIDATE_V8.md`](RELEASE_CANDIDATE_V8.md) — snapshot RC1 et politique de gel.
+- [`RELEASE_CANDIDATE_V8.md`](RELEASE_CANDIDATE_V8.md) — état de la Release Candidate.
 
-## Déploiement
+## Politique de finalisation
 
-Le dépôt est publié automatiquement avec **GitHub Pages** depuis la branche `main`. Le workflow reconstruit les dérivés d'images avant publication afin d'éviter qu'un master valide soit déployé sans ses formats responsives.
+La stratégie de fin de projet est volontairement stricte :
 
-## Politique de release
+**V8.16 validée → V8.17 Release Gate renforcé → correction des seuls défauts mesurés → Release Candidate PGW → gel.**
 
-RC1 est gelée. Après le gel :
+Le pilote avec de vrais élèves a été volontairement supprimé du processus. Le risque résiduel accepté concerne donc la charge réelle de saisie des 61 questions ; il reste documenté et ne doit pas conduire à modifier le contenu sur simple intuition.
 
-- aucune nouvelle fonctionnalité ;
-- aucune retouche esthétique sans défaut mesuré ;
-- aucune modification du contenu pédagogique sur simple intuition ;
-- seules les corrections P0/P1 reproductibles sont acceptées ;
-- toute correction doit repasser l'intégralité des Quality Gates avant de devenir RC2 ou ultérieure.
-
-Le pilote avec de vrais élèves a été volontairement annulé. Le risque résiduel accepté concerne donc uniquement la charge réelle de saisie des 61 questions ; il est documenté dans la Release Candidate.
+Après le `GO RC`, aucune nouvelle fonctionnalité ou retouche esthétique n'est ajoutée. Seules des corrections bloquantes et reproductibles peuvent justifier une nouvelle Release Candidate.
 
 ## Contexte pédagogique
 
-Projet réalisé pour les élèves de Terminale NSI du **lycée Watteau de Valenciennes**. L'objectif est de transformer la visite de la Paris Games Week en activité d'observation, d'investigation et de mise en relation avec l'informatique, les formations et les métiers du numérique.
+Projet conçu pour les élèves de Terminale NSI du **lycée Watteau de Valenciennes** afin de transformer la Paris Games Week en activité d'observation, d'investigation et de mise en relation avec l'informatique, les formations et les métiers du numérique.
