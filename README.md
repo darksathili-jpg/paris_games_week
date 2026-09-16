@@ -16,7 +16,7 @@ PGW NSI Quest transforme la visite en parcours d'investigation : six missions pr
 - **Backend** : Supabase Auth + PostgreSQL + Row Level Security
 - **Branche gelée** : `release/pgw-2026-rc1`
 
-Le nettoyage contrôlé du dépôt et le README final ont repassé le **V8.17 Release Gate complet avec succès**. Le snapshot applicatif de référence est le commit `2493de432cbafe2ef3f21bd42f49beb269467b6c`.
+Le nettoyage contrôlé du dépôt a repassé le **V8.17 Release Gate complet avec succès**. Le snapshot applicatif RC1 de référence est le commit `2493de432cbafe2ef3f21bd42f49beb269467b6c`.
 
 ## Accès
 
@@ -156,7 +156,7 @@ Documents techniques utiles :
 
 ## Politique de finalisation
 
-La stratégie de fin de projet est désormais achevée :
+La stratégie de fin de projet est achevée :
 
 **V8.16 validée → V8.17 Release Gate renforcé → correction des seuls défauts mesurés → Release Candidate PGW RC1 → gel.**
 
