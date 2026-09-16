@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PGW Operational Pack — RC1</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#101828;background:#eef2f6}*{box-sizing:border-box}body{margin:0;padding:24px}.sheet{max-width:900px;margin:auto;background:white;padding:28px 32px;border-radius:18px;box-shadow:0 12px 40px #0002}.top{display:grid;grid-template-columns:1fr 150px;gap:24px;align-items:start}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#475467}h1{font-size:28px;line-height:1.05;margin:5px 0 8px}h2{font-size:15px;margin:0 0 8px}.meta{font-size:13px;color:#475467;line-height:1.45}.qr{text-align:center;font-size:11px;color:#475467}.qr img{width:132px;height:132px;display:block;margin:auto;border:8px solid white}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.card{border:1px solid #d0d5dd;border-radius:12px;padding:13px 15px;break-inside:avoid}.card strong{color:#111827}.card ol,.card ul{margin:6px 0 0 18px;padding:0}.card li{margin:4px 0;font-size:12.5px;line-height:1.32}.wide{grid-column:1/-1}.urls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.pill{border:1px solid #d0d5dd;border-radius:9px;padding:9px 11px;font-size:11.5px;overflow-wrap:anywhere}.ok{background:#ecfdf3;border-color:#abefc6}.warn{background:#fffaeb;border-color:#fedf89}.danger{background:#fef3f2;border-color:#fecdca}.footer{margin-top:14px;padding-top:10px;border-top:1px solid #eaecf0;font-size:11px;color:#667085}.green{font-weight:800;color:#027a48}@media(max-width:700px){body{padding:0}.sheet{border-radius:0;padding:20px}.top,.grid,.urls{grid-template-columns:1fr}.qr{order:-1}.wide{grid-column:auto}}@media print{@page{size:A4;margin:10mm}body{background:#fff;padding:0}.sheet{box-shadow:none;max-width:none;padding:0;border-radius:0}.card{padding:10px 12px}.grid{gap:8px;margin-top:12px}h1{font-size:24px}.qr img{width:112px;height:112px}.footer{margin-top:10px}}
+</style>
+</head>
+<body>
+<main class="sheet">
+<section class="top">
+<div>
+<div class="eyebrow">PGW NSI Quest · V8.17 RC1</div>
+<h1>Fiche terrain enseignant</h1>
+<div class="meta"><strong>Paris Games Week · 23 octobre 2026</strong><br>Terminale NSI · Lycée Watteau · Code session prévu : <strong>PGW26</strong><br>RC1 gelée : <code>2493de432cbafe2ef3f21bd42f49beb269467b6c</code></div>
+<div class="urls"><div class="pill"><strong>Élèves</strong><br>https://darksathili-jpg.github.io/paris_games_week/</div><div class="pill"><strong>Cockpit</strong><br>https://darksathili-jpg.github.io/paris_games_week/teacher.html</div></div>
+</div>
+<div class="qr"><img src="assets/pgw-qr-eleve.svg" alt="QR code vers l'application élève"><strong>QR élève</strong><br>Scanner puis « Relier cette visite »</div>
+</section>
+
+<section class="grid">
+<div class="card ok"><h2>1 · Démarrage — 2 min</h2><ol><li>Supabase : Anonymous Sign-Ins activé ; limite <strong>60/h</strong>.</li><li>Ouvrir le cockpit → session <strong>PGW NSI 2026</strong> → <strong>Inscriptions ouvertes</strong>.</li><li>Élèves : QR → code <strong>PGW26</strong> + pseudo + classe.</li><li>Quand tous sont reliés : <strong>Fermer les inscriptions</strong>. La synchronisation reste active.</li></ol></div>
+
+<div class="card warn"><h2>2 · Réseau mauvais</h2><ul><li>Continuer : les réponses restent enregistrées localement.</li><li>Ne pas effacer les données navigateur, changer de navigateur ou passer en privé.</li><li>Laisser la même page ouverte jusqu'au retour du réseau.</li><li>Erreur 429 : attendre puis réessayer ; ne pas recréer des comptes.</li></ul></div>
+
+<div class="card danger"><h2>3 · Changement de téléphone</h2><ol><li>Ancien appareil : obtenir d'abord <span class="green">✓ Données envoyées · tu peux quitter</span>.</li><li>Réouvrir temporairement les inscriptions si nécessaire.</li><li>Nouveau téléphone : QR + PGW26 + pseudo distinct, ex. <strong>Prénom-2</strong>.</li><li>Refermer les inscriptions. L'ancien et le nouveau profil seront consolidés dans le CSV si besoin.</li></ol><small>Sans synchronisation préalable, les réponses uniquement locales de l'ancien téléphone ne sont pas récupérables depuis Supabase.</small></div>
+
+<div class="card ok"><h2>4 · Avant de quitter le salon</h2><ol><li>Cockpit → <strong>Contrôle de fin de visite</strong>.</li><li>Objectif : <strong>À vérifier avant départ = 0</strong>.</li><li>Chaque élève doit voir <span class="green">✓ Données envoyées · tu peux quitter</span>.</li><li>Sinon : réseau actif + application ouverte, puis <strong>↻ Actualiser</strong> le cockpit.</li></ol></div>
+
+<div class="card wide"><h2>5 · Export final</h2><ol><li><strong>Fermer les inscriptions</strong> → <strong>↻ Actualiser</strong> → vérifier qu'il ne reste aucun élève à contrôler.</li><li>Cliquer <strong>Exporter CSV</strong> et ouvrir immédiatement <code>pgw-nsi-2026-2026-10-23.csv</code>.</li><li>Vérifier la présence des élèves/réponses puis conserver <strong>deux copies</strong> sur deux emplacements distincts.</li></ol></div>
+</section>
+
+<div class="footer"><strong>Règle RC1 :</strong> aucune modification du logiciel sur place sauf défaut P0/P1 reproductible. En cas de problème réseau, priorité à la sauvegarde locale puis à la synchronisation avant départ.</div>
+</main>
+</body>
+</html>
